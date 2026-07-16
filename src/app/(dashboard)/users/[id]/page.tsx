@@ -9,7 +9,10 @@ import {
   getUserById,
   type TransactionRow,
 } from "@/lib/queries";
+import { listAdminClaimsForUser } from "@/lib/claims";
+import { CLAIM_STATUS_LABELS } from "@/lib/claimTypes";
 import {
+  adminClaimTone,
   claimTone,
   isTransactionOverdue,
   itemTone,
@@ -20,6 +23,7 @@ import {
 import { Card } from "@/components/Card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { StatTile } from "@/components/StatTile";
+import { AdjustPointsForm } from "@/components/AdjustPointsForm";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -92,13 +96,15 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
   const user = await getUserById(id);
   if (!user) notFound();
 
-  const [postedItems, borrowedTx, lentTx, claims, pointsHistory] = await Promise.all([
-    getItemsForOwner(id),
-    getTransactionsAsBorrower(id),
-    getTransactionsAsOwner(id),
-    getClaimsForUser(id),
-    getPointsTransactionsForUser(id),
-  ]);
+  const [postedItems, borrowedTx, lentTx, supportClaims, appDisputes, pointsHistory] =
+    await Promise.all([
+      getItemsForOwner(id),
+      getTransactionsAsBorrower(id),
+      getTransactionsAsOwner(id),
+      listAdminClaimsForUser(id),
+      getClaimsForUser(id),
+      getPointsTransactionsForUser(id),
+    ]);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -120,9 +126,9 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-5">
-        <StatTile label="Points" value={user.points} />
+        <StatTile label="Points" value={user.points} compact={false} />
         <StatTile label="Rating" value={user.rating} />
-        <StatTile label="Unresolved penalty" value={user.unresolvedPenaltyAmount} />
+        <StatTile label="Unresolved penalty" value={user.unresolvedPenaltyAmount} compact={false} />
         <StatTile label="Listed items" value={user.listedItemCount} />
         <StatTile label="Borrowed items" value={user.borrowedItemCount} />
       </div>
@@ -170,8 +176,59 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
         <TransactionsTable rows={lentTx} counterpartLabel="Borrower" counterpartId={(t) => t.borrowerId} />
       </Section>
 
-      <Section title={`Claims (${claims.length})`}>
-        {claims.length === 0 ? (
+      <div className="mt-8">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold text-ink-primary">
+            Support claims ({supportClaims.length})
+          </h2>
+          <Link
+            href={`/claims/new?userId=${user.userId}`}
+            className="text-sm font-medium text-accent hover:underline"
+          >
+            + Claim
+          </Link>
+        </div>
+        <Card className="overflow-x-auto">
+          {supportClaims.length === 0 ? (
+            <p className="px-4 py-6 text-center text-sm text-ink-muted">No support claims yet.</p>
+          ) : (
+            <table className="w-full text-left text-sm">
+              <thead className="border-b border-border text-ink-secondary">
+                <tr>
+                  <th className="px-4 py-3 font-medium">Claim ID</th>
+                  <th className="px-4 py-3 font-medium">Title</th>
+                  <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">Updated</th>
+                </tr>
+              </thead>
+              <tbody>
+                {supportClaims.map((c) => (
+                  <tr key={c.id} className="border-b border-border last:border-0 hover:bg-page">
+                    <td className="px-4 py-3 font-mono text-xs text-ink-secondary">{c.claimNumber}</td>
+                    <td className="px-4 py-3">
+                      <Link href={`/claims/${c.id}`} className="text-accent hover:underline">
+                        {c.title}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge
+                        tone={adminClaimTone(c.status)}
+                        label={CLAIM_STATUS_LABELS[c.status]}
+                      />
+                    </td>
+                    <td className="px-4 py-3 text-ink-muted">
+                      {c.updatedAt ? new Date(c.updatedAt).toLocaleDateString() : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </Card>
+      </div>
+
+      <Section title={`App disputes (${appDisputes.length})`}>
+        {appDisputes.length === 0 ? (
           <p className="px-4 py-6 text-center text-sm text-ink-muted">None.</p>
         ) : (
           <table className="w-full text-left text-sm">
@@ -185,7 +242,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
               </tr>
             </thead>
             <tbody>
-              {claims.map((c) => (
+              {appDisputes.map((c) => (
                 <tr key={`${c.kind}-${c.id}`} className="border-b border-border last:border-0 hover:bg-page">
                   <td className="px-4 py-3 capitalize">{c.kind}</td>
                   <td className="px-4 py-3">
@@ -211,6 +268,10 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
             </tbody>
           </table>
         )}
+      </Section>
+
+      <Section title="Adjust points">
+        <AdjustPointsForm userId={user.userId} currentPoints={user.points} />
       </Section>
 
       <Section title={`Points history (${pointsHistory.length})`}>

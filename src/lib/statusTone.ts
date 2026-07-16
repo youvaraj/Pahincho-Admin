@@ -101,3 +101,19 @@ export function claimTone(status: string): Tone {
       return "neutral";
   }
 }
+
+/** Status tones for admin-managed `claims` collection tickets. */
+export function adminClaimTone(status: string): Tone {
+  switch (status) {
+    case "resolved":
+      return "good";
+    case "new":
+      return "neutral";
+    case "in_review":
+      return "warning";
+    case "need_more_info":
+      return "serious";
+    default:
+      return "neutral";
+  }
+}
