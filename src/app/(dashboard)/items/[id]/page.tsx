@@ -28,7 +28,7 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
         ← Items
       </Link>
 
-      <div className="mt-4 flex items-start justify-between">
+      <div className="mt-4 flex items-start justify-between gap-4">
         <div>
           <h1 className="text-lg font-semibold text-ink-primary">{item.title}</h1>
           <p className="mt-1 max-w-2xl text-sm text-ink-secondary">{item.description || "No description."}</p>
@@ -47,7 +47,15 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
             </p>
           )}
         </div>
-        <StatusBadge tone={itemTone(item.status)} label={item.status} />
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          <StatusBadge tone={itemTone(item.status)} label={item.status} />
+          <Link
+            href={`/items/${item.itemId}/label`}
+            className="rounded-md border border-border bg-surface px-3 py-1.5 text-sm font-medium text-ink-primary hover:bg-page"
+          >
+            Print label
+          </Link>
+        </div>
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
