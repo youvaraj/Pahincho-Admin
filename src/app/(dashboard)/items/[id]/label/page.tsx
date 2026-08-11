@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getItemById } from "@/lib/queries";
+import { getItemById, getUserById } from "@/lib/queries";
 import { ItemLabelPrint } from "@/components/ItemLabelPrint";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +13,9 @@ export default async function ItemLabelPage({
   const { id } = await params;
   const item = await getItemById(id);
   if (!item) notFound();
+
+  const owner = item.ownerId ? await getUserById(item.ownerId) : null;
+  const ownerFirstName = owner?.firstName?.trim() || null;
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -31,7 +34,12 @@ export default async function ItemLabelPage({
       </div>
 
       <div className="mt-6">
-        <ItemLabelPrint itemId={item.itemId} title={item.title} />
+        <ItemLabelPrint
+          itemId={item.itemId}
+          title={item.title}
+          listedAt={item.listedAt}
+          ownerFirstName={ownerFirstName}
+        />
       </div>
     </div>
   );
