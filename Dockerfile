@@ -1,7 +1,10 @@
 FROM node:20-bookworm-slim AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# package-lock was generated on macOS, so linux optional native binaries for
+# Tailwind/lightningcss are missing — install them explicitly for Cloud Build.
+RUN npm ci \
+  && npm install --no-save lightningcss-linux-x64-gnu @tailwindcss/oxide-linux-x64-gnu
 
 FROM node:20-bookworm-slim AS builder
 WORKDIR /app
