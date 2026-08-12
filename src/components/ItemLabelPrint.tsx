@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { BASE_PATH } from "@/lib/basePath";
 import {
   buildItemLabelDeepLink,
   buildItemLabelQrImageUrl,
@@ -100,26 +101,34 @@ export function ItemLabelPrint({
             style={{ width: "1.35in", height: "1.35in" }}
           />
           <div className="min-w-0 flex-1 text-left">
-            <p className="label-brand text-[9px] font-semibold uppercase tracking-wide text-ink-muted">
-              Pahincho
-            </p>
-            <h1 className="label-title mt-0.5 text-[12px] font-semibold leading-tight text-ink-primary line-clamp-3">
+            <div className="label-brand flex items-center gap-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`${BASE_PATH}/logo-black.png`}
+                alt=""
+                className="h-[10px] w-auto shrink-0 object-contain"
+              />
+              <p className="text-[9px] font-normal uppercase tracking-wide leading-none text-ink-muted">
+                Pahincho
+              </p>
+            </div>
+            <h1 className="label-title mt-1.5 text-[12px] font-semibold leading-tight text-ink-primary line-clamp-3">
               {title || "Untitled item"}
             </h1>
             {owner ? (
-              <p className="label-owner mt-1 text-[9px] text-ink-muted">
+              <p className="label-owner mt-1 text-[9px] font-normal leading-tight text-ink-muted">
                 Owner: {owner}
               </p>
             ) : null}
-            <p className="label-code mt-2 font-mono text-[10px] text-ink-secondary">
+            <p className="label-code mt-1 font-mono text-[10px] font-normal leading-tight text-ink-secondary">
               {shortItemCode(itemId)}
             </p>
             {posted ? (
-              <p className="label-posted mt-1 text-[9px] text-ink-muted">
+              <p className="label-posted text-[9px] font-normal leading-tight text-ink-muted">
                 Posted: {posted}
               </p>
             ) : null}
-            <p className="label-hint mt-1 text-[8px] leading-snug text-ink-muted">
+            <p className="label-hint text-[8px] font-normal leading-tight text-ink-muted">
               Scan to open in app
             </p>
           </div>
