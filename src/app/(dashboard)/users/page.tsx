@@ -8,6 +8,9 @@ import { Card } from "@/components/Card";
 import { Spinner } from "@/components/Spinner";
 import { Pagination } from "@/components/Pagination";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const HEADERS = ["Name", "Email", "Status", "Listed", "Borrowed", "Unresolved penalty", "Joined"];
 
 function UsersTableBody({ users }: { users: Awaited<ReturnType<typeof searchUsers>> }) {
