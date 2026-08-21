@@ -1,0 +1,1860 @@
+{
+  "electronics": {
+    "name": "Electronics",
+    "subcategories": [
+      {
+        "id": "mobile_phones_accessories",
+        "name": "Mobile Phones & Accessories",
+        "subsubcategories": [
+          {
+            "id": "smartphones",
+            "name": "Smartphones",
+            "keywords": [
+              "iPhone",
+              "Android",
+              "Samsung Galaxy",
+              "OnePlus",
+              "Google Pixel",
+              "cell phone",
+              "smartphone",
+              "mobile phone",
+              "mobile",
+              "phone",
+              "handset"
+            ]
+          },
+          {
+            "id": "phone_cases",
+            "name": "Phone Cases & Covers",
+            "keywords": [
+              "protective case",
+              "silicone case",
+              "leather case",
+              "wallet case",
+              "phone case",
+              "phone cover",
+              "case cover"
+            ]
+          },
+          {
+            "id": "chargers_cables",
+            "name": "Chargers & Cables",
+            "keywords": [
+              "USB cable",
+              "fast charger",
+              "wireless charger",
+              "lightning cable",
+              "charger",
+              "cable",
+              "USB-C",
+              "type-c",
+              "adapter",
+              "charging cable",
+              "power adapter"
+            ]
+          },
+          {
+            "id": "power_banks",
+            "name": "Power Banks",
+            "keywords": [
+              "portable charger",
+              "external battery",
+              "fast charging power bank",
+              "power bank",
+              "battery pack",
+              "portable battery"
+            ]
+          },
+          {
+            "id": "smart_watches",
+            "name": "Smartwatches",
+            "keywords": [
+              "Apple Watch",
+              "Samsung Galaxy Watch",
+              "fitness tracker",
+              "Fitbit",
+              "smartwatch",
+              "smart watch",
+              "wearable",
+              "activity tracker"
+            ]
+          },
+          {
+            "id": "screen_protectors",
+            "name": "Screen Protectors",
+            "keywords": [
+              "Tempered glass",
+              "Phone screen guard",
+              "Anti-scratch screen protector",
+              "Ultra-clear screen guard"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "computers_accessories",
+        "name": "Computers & Accessories",
+        "subsubcategories": [
+          {
+            "id": "laptops",
+            "name": "Laptops",
+            "keywords": [
+              "MacBook",
+              "Windows laptop",
+              "gaming laptop",
+              "ultrabook",
+              "notebook",
+              "laptop",
+              "chromebook",
+              "2-in-1",
+              "convertible laptop"
+            ]
+          },
+          {
+            "id": "desktops",
+            "name": "Desktop Computers",
+            "keywords": [
+              "PC",
+              "workstation",
+              "all-in-one PC",
+              "mini PC",
+              "desktop",
+              "computer",
+              "tower",
+              "all-in-one"
+            ]
+          },
+          {
+            "id": "keyboards_mouse",
+            "name": "Keyboards & Mouse",
+            "keywords": [
+              "wireless keyboard",
+              "mechanical keyboard",
+              "gaming mouse",
+              "keyboard",
+              "mouse",
+              "trackpad",
+              "keyboard and mouse"
+            ]
+          },
+          {
+            "id": "monitors",
+            "name": "Monitors",
+            "keywords": [
+              "gaming monitor",
+              "4K monitor",
+              "curved monitor",
+              "dual-screen monitor",
+              "monitor",
+              "display",
+              "screen",
+              "LED monitor",
+              "ultrawide monitor"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "audio_headphones",
+        "name": "Audio & Headphones",
+        "subsubcategories": [
+          {
+            "id": "headphones",
+            "name": "Headphones & Earbuds",
+            "keywords": [
+              "wireless earbuds",
+              "AirPods",
+              "noise-canceling headphones",
+              "gaming headset",
+              "headphones",
+              "earbuds",
+              "earphones",
+              "headset",
+              "bluetooth headphones",
+              "over-ear",
+              "on-ear"
+            ]
+          },
+          {
+            "id": "speakers",
+            "name": "Speakers",
+            "keywords": [
+              "Bluetooth speaker",
+              "smart speaker",
+              "home theater",
+              "soundbar",
+              "speaker",
+              "speakers",
+              "portable speaker",
+              "bookshelf speaker"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cameras_photography",
+        "name": "Cameras & Photography",
+        "subsubcategories": [
+          {
+            "id": "digitalcameras",
+            "name": "Digital Cameras",
+            "keywords": [
+              "digital camera",
+              "DSLR",
+              "Point-and-shoot",
+              "travel camera",
+              "camera body",
+              "Professional camera",
+              "camera",
+              "mirrorless",
+              "compact camera",
+              "vlogging camera"
+            ]
+          },
+          {
+            "id": "camera_lenses",
+            "name": "Camera Lenses",
+            "keywords": [
+              "Lens cap",
+              "Lens filter",
+              "Lens case",
+              "50mm lens",
+              "35mm lens"
+            ]
+          },
+          {
+            "id": "tripods_mounts",
+            "name": "Tripods & Mounts",
+            "keywords": [
+              "Tripod",
+              "Camera tripod",
+              "DSLR tripod",
+              "Video tripod",
+              "Travel tripod"
+            ]
+          },
+          {
+            "id": "camera_bags_cases",
+            "name": "Camera Bags & Cases",
+            "keywords": [
+              "Camera bag",
+              "Camera case",
+              "Camera backpack",
+              "Camera pouch"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tvs_home_entertainment",
+        "name": "TVs & Home Entertainment",
+        "subsubcategories": [
+          {
+            "id": "led_tvs",
+            "name": "LED TVs",
+            "keywords": [
+              "LED TV",
+              "Smart LED TV",
+              "4K LED TV",
+              "1080p LED TV",
+              "Flat screen LED TV",
+              "Ultra HD LED TV",
+              "Full HD LED TV",
+              "LED television",
+              "TV",
+              "television",
+              "flat screen",
+              "smart TV"
+            ]
+          },
+          {
+            "id": "sound_bars",
+            "name": "Soundbars",
+            "keywords": [
+              "Soundbar",
+              "Wireless soundbar",
+              "Bluetooth soundbar",
+              "Smart soundbar",
+              "Dolby soundbar"
+            ]
+          },
+          {
+            "id": "projectors",
+            "name": "Projectors",
+            "keywords": [
+              "Projector",
+              "LED projector",
+              "4K projector",
+              "1080 projector",
+              "Portable projector",
+              "home theater projector",
+              "Mini projector"
+            ]
+          },
+          {
+            "id": "home_theater_systems",
+            "name": "Home Theater Systems",
+            "keywords": [
+              "Home theater system",
+              "5.1 home theater",
+              "Surround sound system",
+              "Wireless home theater",
+              "Home audio system",
+              "Full home theater system"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gaming",
+        "name": "Gaming",
+        "subsubcategories": [
+          {
+            "id": "gaming_consoles",
+            "name": "Gaming Consoles",
+            "keywords": [
+              "Gaming console",
+              "Video game console",
+              "Video game",
+              "Console gaming",
+              "Playstation",
+              "Xbox",
+              "Nintendo switch",
+              "Retro gaming",
+              "Mini gaming",
+              "Handheld game console",
+              "Sony Playstation",
+              "Sega genesis",
+              "Atari console",
+              "PS5",
+              "PS4",
+              "Xbox Series",
+              "Steam Deck",
+              "gaming"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "home_kitchen": {
+    "name": "Home & Kitchen",
+    "subcategories": [
+      {
+        "id": "furniture",
+        "name": "Furniture",
+        "subsubcategories": [
+          {
+            "id": "living_room_furniture",
+            "name": "Living Room Furniture",
+            "keywords": [
+              "sectional sofa",
+              "loveseat",
+              "recliner chair",
+              "futon",
+              "armchair",
+              "console table",
+              "sofa",
+              "couch",
+              "recliner",
+              "sectional",
+              "coffee table",
+              "tv stand",
+              "entertainment center"
+            ]
+          },
+          {
+            "id": "bedroom_furniture",
+            "name": "Bedroom Furniture",
+            "keywords": [
+              "platform bed",
+              "bunk bed",
+              "dresser",
+              "nightstand",
+              "modern table",
+              "wardrobe closet",
+              "king-size bed",
+              "twin bed",
+              "queen-size bed",
+              "bed",
+              "bed frame",
+              "headboard",
+              "wardrobe",
+              "closet"
+            ]
+          },
+          {
+            "id": "kitchen_dining_furniture",
+            "name": "Kitchen & Dining Furniture",
+            "keywords": [
+              "Rectangular dining table",
+              "dining table",
+              "dining chairs",
+              "sideboard",
+              "china cabinet",
+              "wine rack",
+              "dining set",
+              "table",
+              "chairs",
+              "bar stool",
+              "kitchen table"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bedding_linens",
+        "name": "Bedding & Linens",
+        "subsubcategories": [
+          {
+            "id": "bed_sheets_pillowcases",
+            "name": "Bed Sheets & Pillowcases",
+            "keywords": [
+              "fitted sheet",
+              "flat sheet",
+              "deep pocket sheet",
+              "cotton sheets",
+              "linen sheets",
+              "pillowcase",
+              "standard pillowcase"
+            ]
+          },
+          {
+            "id": "comforters_duvets",
+            "name": "Comforters & Duvets",
+            "keywords": [
+              "comforter",
+              "duvet",
+              "bedding",
+              "quilt",
+              "blanket",
+              "throw"
+            ]
+          },
+          {
+            "id": "mattresses",
+            "name": "Mattresses",
+            "keywords": [
+              "mattress",
+              "firm mattress",
+              "soft mattress",
+              "memory foam mattress"
+            ]
+          },
+          {
+            "id": "towels_bathrobes",
+            "name": "Towels & Bathrobes",
+            "keywords": [
+              "towels",
+              "towel",
+              "bathrobe",
+              "quick-dry towels",
+              "plush towels",
+              "bath towels",
+              "hand towels",
+              "beach towels"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "appliances",
+        "name": "Appliances",
+        "subsubcategories": [
+          {
+            "id": "kitchen_appliances",
+            "name": "Kitchen Appliances",
+            "keywords": [
+              "air fryer",
+              "convection oven",
+              "toaster oven",
+              "microwave",
+              "slow cooker",
+              "pressure cooker",
+              "cooktop",
+              "blender",
+              "food processor",
+              "stand mixer",
+              "hand mixer",
+              "dishwasher",
+              "ice maker",
+              "espresso machine",
+              "chopper",
+              "grinder",
+              "toaster",
+              "coffee maker",
+              "kettle",
+              "juicer",
+              "rice cooker"
+            ]
+          },
+          {
+            "id": "home_appliances",
+            "name": "Home Appliances",
+            "keywords": [
+              "refrigerator",
+              "fridge",
+              "dishwasher",
+              "washing machine",
+              "dryer",
+              "iron",
+              "air Conditioner",
+              "ceiling fan",
+              "space heater",
+              "humidifier",
+              "air purifier",
+              "washer",
+              "dehumidifier"
+            ]
+          },
+          {
+            "id": "vacuum_cleaners",
+            "name": "Vacuum Cleaners",
+            "keywords": [
+              "vacuum",
+              "vacuum cleaner",
+              "cordless vacuum",
+              "robot vacuum",
+              "stick vacuum",
+              "handheld vacuum",
+              "vacuum cleaner"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "home_decor",
+        "name": "Home Decor",
+        "subsubcategories": [
+          {
+            "id": "rugs_carpets",
+            "name": "Rugs & Carpets",
+            "keywords": [
+              "rugs",
+              "rug",
+              "carpet",
+              "area rug",
+              "runner",
+              "doormat"
+            ]
+          },
+          {
+            "id": "curtains_blinds",
+            "name": "Curtains & Blinds",
+            "keywords": [
+              "curtains",
+              "blinds",
+              "drapes",
+              "window treatment",
+              "shades"
+            ]
+          },
+          {
+            "id": "wall_art_mirrors",
+            "name": "Wall Art & Mirrors",
+            "keywords": [
+              "wall art",
+              "wall arts",
+              "mirror",
+              "mirrors",
+              "wall decor",
+              "picture frame",
+              "poster"
+            ]
+          },
+          {
+            "id": "clocks_lamps",
+            "name": "Clocks & Lamps",
+            "keywords": [
+              "clock",
+              "lamp",
+              "lamps",
+              "floor lamp",
+              "alarm clock",
+              "pendant light"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "vehicles_automobiles": {
+    "name": "Vehicles & Automobiles",
+    "subcategories": [
+      {
+        "id": "cars",
+        "name": "Cars",
+        "subsubcategories": [
+          {
+            "id": "sedans",
+            "name": "Sedans",
+            "keywords": [
+              "Toyota Camry",
+              "Honda Accord",
+              "Nissan Altima",
+              "sedan",
+              "sedans",
+              "car",
+              "cars",
+              "vehicle"
+            ]
+          },
+          {
+            "id": "suvs",
+            "name": "SUVs",
+            "keywords": [
+              "Ford Explorer",
+              "Jeep Wrangler",
+              "Honda CR-V",
+              "SUV",
+              "SUVs",
+              "crossover",
+              "4x4"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "motorcycles",
+        "name": "Motorcycles",
+        "subsubcategories": [
+          {
+            "id": "sports_bikes",
+            "name": "Sports Bikes",
+            "keywords": [
+              "Yamaha R1",
+              "Kawasaki Ninja",
+              "Ducati Panigale",
+              "sports bike",
+              "sport motorcycle",
+              "motorcycle"
+            ]
+          },
+          {
+            "id": "cruiser_bikes",
+            "name": "Cruiser Bikes",
+            "keywords": [
+              "Harley Davidson",
+              "Royal Enfield",
+              "Indian Scout",
+              "cruiser",
+              "motorbike",
+              "bike"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "real_estate": {
+    "name": "Real Estate",
+    "subcategories": [
+      {
+        "id": "residential",
+        "name": "Residential",
+        "subsubcategories": [
+          {
+            "id": "apartments",
+            "name": "Apartments",
+            "keywords": [
+              "studio apartment",
+              "2-bedroom apartment",
+              "penthouse",
+              "apartment",
+              "flat",
+              "condo",
+              "rental"
+            ]
+          },
+          {
+            "id": "houses",
+            "name": "Houses",
+            "keywords": [
+              "single-family home",
+              "townhouse",
+              "bungalow",
+              "mansion",
+              "house",
+              "home",
+              "duplex",
+              "villa"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "commercial",
+        "name": "Commercial Properties",
+        "subsubcategories": [
+          {
+            "id": "office_spaces",
+            "name": "Office Spaces",
+            "keywords": [
+              "coworking space",
+              "corporate office",
+              "commercial building"
+            ]
+          },
+          {
+            "id": "retail_spaces",
+            "name": "Retail Spaces",
+            "keywords": ["shopping mall", "storefront", "showroom"]
+          }
+        ]
+      }
+    ]
+  },
+  "fashion": {
+    "name": "Fashion & Accessories",
+    "subcategories": [
+      {
+        "id": "mens_clothing",
+        "name": "Men's Clothing",
+        "subsubcategories": [
+          {
+            "id": "mens_shirts",
+            "name": "Shirts",
+            "keywords": [
+              "formal shirt",
+              "casual shirt",
+              "denim shirt",
+              "polo shirt",
+              "shirt",
+              "dress shirt",
+              "t-shirt",
+              "tee"
+            ]
+          },
+          {
+            "id": "mens_pants",
+            "name": "Pants & Jeans",
+            "keywords": [
+              "jeans",
+              "trousers",
+              "chinos",
+              "joggers",
+              "pants",
+              "denim",
+              "shorts"
+            ]
+          },
+          {
+            "id": "mens_jackets_coats",
+            "name": "Jackets & Coats",
+            "keywords": [
+              "blazers",
+              "outerwear",
+              "leather jacket",
+              "puffer jacket"
+            ]
+          },
+          {
+            "id": "mens_sweathers_hoodies",
+            "name": "Sweaters & Hoodies",
+            "keywords": ["sweatshirts", "hoodies", "pullovers", "zip-up hoodie"]
+          }
+        ]
+      },
+      {
+        "id": "womens_clothing",
+        "name": "Women's Clothing",
+        "subsubcategories": [
+          {
+            "id": "womens_dresses",
+            "name": "Dresses",
+            "keywords": [
+              "evening gown",
+              "casual dress",
+              "summer dress",
+              "dress",
+              "gown",
+              "cocktail dress"
+            ]
+          },
+          {
+            "id": "womens_tops",
+            "name": "Tops & Blouses",
+            "keywords": ["crop top", "blouse", "tunic", "sweater"]
+          },
+          {
+            "id": "womens_skirts_pants",
+            "name": "Skirts & Pants",
+            "keywords": [
+              "skirts",
+              "women's pants",
+              "trousers",
+              "denim skirts",
+              "pencil skirts",
+              "a-line skirts",
+              "mini skirts",
+              "midi skirts",
+              "maxi skirts",
+              "high-waisted pants",
+              "low-rise pants",
+              "leggings",
+              "chinos",
+              "women's cargo pants",
+              "culottes",
+              "capri",
+              "office pants",
+              "palazzo"
+            ]
+          },
+          {
+            "id": "womens_outerwears_jackets",
+            "name": "Outerwears & Jackets",
+            "keywords": [
+              "women's jackets",
+              "women's coats",
+              "parkas",
+              "cardigans",
+              "shawl collar jackets",
+              "pea coats",
+              "fleece jacket",
+              "bomber jacket",
+              "down jacket",
+              "leather jacket",
+              "rain jacket",
+              "ski jacket"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "footwear",
+        "name": "Footwear",
+        "subsubcategories": [
+          {
+            "id": "mens_shoes",
+            "name": "Men's shoes",
+            "keywords": [
+              "footwear",
+              "men shoes",
+              "loafers",
+              "mens shoes",
+              "oxford",
+              "derby",
+              "boots",
+              "sandals"
+            ]
+          },
+          {
+            "id": "womens_shoes",
+            "name": "Women's shoes",
+            "keywords": [
+              "womens footwear",
+              "womens shoes",
+              "women shoes",
+              "heels",
+              "flats",
+              "pumps",
+              "ballerina",
+              "loafers"
+            ]
+          },
+          {
+            "id": "boots_heels",
+            "name": "Boots & Heels",
+            "keywords": [
+              "women's boots",
+              "chelsea boots",
+              "ankle boots",
+              "knee-high boots",
+              "moccasins",
+              "high heels"
+            ]
+          },
+          {
+            "id": "sandals_slippers",
+            "name": "Sandals & Slippers",
+            "keywords": [
+              "women's sandals",
+              "women's slippers",
+              "flip-flops",
+              "slide sandals",
+              "slip-on sandals",
+              "beach sandals",
+              "summer sandals",
+              "flat sandals",
+              "heeled sandals",
+              "wedge sandals",
+              "platform sandals",
+              "thong sandals",
+              "t-strap sandals",
+              "buckled sandals",
+              "closed-toe sandals",
+              "Open-toe sandals"
+            ]
+          },
+          {
+            "id": "sneakers",
+            "name": "Sneakers",
+            "keywords": [
+              "sneakers",
+              "sport shoes",
+              "running shoes",
+              "athletic shoes",
+              "casual sneakers",
+              "fashion sneakers",
+              "walking sneakers"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fashion_accessories",
+        "name": "Fashion Accessories",
+        "subsubcategories": [
+          {
+            "id": "bags_wallets",
+            "name": "Bags & Wallets",
+            "keywords": [
+              "handbags",
+              "tote bags",
+              "crossbody bags",
+              "shoulder bags",
+              "clutch bags",
+              "backpacks",
+              "purse",
+              "wallet",
+              "wallets",
+              "bag"
+            ]
+          },
+          {
+            "id": "watches_jewelry",
+            "name": "Watches & Jewelry",
+            "keywords": [
+              "luxury watches",
+              "Stainless steel watches",
+              "luxury pendants",
+              "charm bracelets",
+              "bracelets",
+              "elegant earrings",
+              "watch",
+              "watches",
+              "jewelry",
+              "jewellery",
+              "necklace",
+              "earrings",
+              "ring",
+              "pendant"
+            ]
+          },
+          {
+            "id": "hats_caps",
+            "name": "Hats & Caps",
+            "keywords": [
+              "baseball caps",
+              "trucker hats",
+              "dad hats",
+              "beret hats"
+            ]
+          },
+          {
+            "id": "sunglasses",
+            "name": "Sunglasses",
+            "keywords": [
+              "UV protection",
+              "Polarized lenses",
+              "ray-ban",
+              "oakley",
+              "gucci",
+              "prada",
+              "versace",
+              "chanel",
+              "dior",
+              "burberry",
+              "dolce & gabbana",
+              "sunglasses",
+              "sunglass",
+              "shades",
+              "eyewear"
+            ]
+          },
+          {
+            "id": "belts_scarves",
+            "name": "Belts & Scarves",
+            "keywords": ["belts", "scarves", "shawls"]
+          }
+        ]
+      }
+    ]
+  },
+  "health_personal_care": {
+    "name": "Health & Personal Care",
+    "subcategories": [
+      {
+        "id": "personal_care",
+        "name": "Personal Care",
+        "subsubcategories": [
+          {
+            "id": "skincare",
+            "name": "Skincare",
+            "keywords": [
+              "skincare",
+              "moisturizers",
+              "cleansers",
+              "face serums",
+              "sunscreen",
+              "toners",
+              "face masks",
+              "night creams",
+              "eye creams",
+              "lip balm",
+              "facial oils",
+              "SPF protection",
+              "lotion",
+              "cream",
+              "serum"
+            ]
+          },
+          {
+            "id": "hair_care",
+            "name": "Hair Care",
+            "keywords": [
+              "Shampoo",
+              "Conditioner",
+              "Hair masks",
+              "Hair oils",
+              "Hair serums",
+              "Hair mousse",
+              "Hair spray",
+              "Hair gel",
+              "Hair wax"
+            ]
+          },
+          {
+            "id": "oral_care",
+            "name": "Oral Care",
+            "keywords": [
+              "toothpaste",
+              "toothbrush",
+              "mouthwash",
+              "dental floss"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "baby_kids": {
+    "name": "Baby & Kids",
+    "subcategories": [
+      {
+        "id": "baby_clothing",
+        "name": "Baby Clothing",
+        "subsubcategories": [
+          {
+            "id": "onesies_rompers",
+            "name": "Onesies & Rompers",
+            "keywords": ["onesies", "rompers", "onesie", "baby romper"]
+          },
+          {
+            "id": "pajamas_sleepwear",
+            "name": "Pajamas & Sleepwear",
+            "keywords": ["pajamas", "sleepwear", "baby pajamas", "kids pajamas"]
+          },
+          {
+            "id": "baby_outerwear_jackets",
+            "name": "Baby Outerwear & Jackets",
+            "keywords": [
+              "baby outerwear",
+              "baby jackets",
+              "baby coat",
+              "toddler jacket"
+            ]
+          },
+          {
+            "id": "baby_socks_shoe",
+            "name": "Baby Socks & Shoes",
+            "keywords": [
+              "baby socks",
+              "baby shoes",
+              "toddler shoes",
+              "baby booties"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "toys_games",
+        "name": "Toys & Games",
+        "subsubcategories": [
+          {
+            "id": "educational_toys",
+            "name": "Educational Toys",
+            "keywords": [
+              "educational toys",
+              "learning toys",
+              "STEM",
+              "building blocks"
+            ]
+          },
+          {
+            "id": "action_figures_dolls",
+            "name": "Action Figures & Dolls",
+            "keywords": [
+              "action figures",
+              "dolls",
+              "action figure",
+              "doll",
+              "plush",
+              "stuffed animal"
+            ]
+          },
+          {
+            "id": "board_games_puzzles",
+            "name": "Board Games & Puzzles",
+            "keywords": [
+              "board games",
+              "puzzles",
+              "jigsaw",
+              "card game",
+              "board game"
+            ]
+          },
+          {
+            "id": "remote_controlled_toys",
+            "name": "Remote Controlled Toys",
+            "keywords": [
+              "remote controlled",
+              "toys",
+              "RC",
+              "remote control",
+              "drone",
+              "toy car"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "baby_gear",
+        "name": "Baby Gear",
+        "subsubcategories": [
+          {
+            "id": "strollers_car_seats",
+            "name": "Stroller & Car Seats",
+            "keywords": ["strollers", "stroller", "car seats", "car seat"]
+          },
+          {
+            "id": "baby_carriers_slings",
+            "name": "Baby Carriers & Slings",
+            "keywords": [
+              "baby carriers",
+              "slings",
+              "baby carrier",
+              "wrap",
+              "ergobaby",
+              "baby wearing"
+            ]
+          },
+          {
+            "id": "high_chairs_booster_seats",
+            "name": "High Chairs & Booster Seats",
+            "keywords": [
+              "high chair",
+              "booster seats",
+              "booster seat",
+              "feeding chair",
+              "baby chair"
+            ]
+          },
+          {
+            "id": "baby_monitors",
+            "name": "Baby Monitors",
+            "keywords": [
+              "baby monitors",
+              "baby monitor",
+              "video monitor",
+              "nursery monitor"
+            ]
+          },
+          {
+            "id": "baby_diaper_bags",
+            "name": "Diaper Bags",
+            "keywords": ["diaper bags", "diaper bag", "baby bag", "nappy bag"]
+          }
+        ]
+      }
+    ]
+  },
+  "sports_outdoors": {
+    "name": "Sports & Outdoors",
+    "subcategories": [
+      {
+        "id": "fitness_equipment",
+        "name": "Fitness Equipment",
+        "subsubcategories": [
+          {
+            "id": "weights_dumbbells",
+            "name": "Weights & Dumbbells",
+            "keywords": [
+              "weights",
+              "weight",
+              "dumbbell",
+              "dumbbells",
+              "kettlebell",
+              "resistance band",
+              "weight set"
+            ]
+          },
+          {
+            "id": "yogas_pilates",
+            "name": "Yoga & Pilates",
+            "keywords": [
+              "yoga",
+              "pilates",
+              "yoga mat",
+              "pilates mat",
+              "exercise mat"
+            ]
+          },
+          {
+            "id": "cardio_machines",
+            "name": "Cardio Machines",
+            "keywords": [
+              "treadmill",
+              "elliptical",
+              "exercise bike",
+              "rower",
+              "stair climber",
+              "cardio",
+              "stationary bike",
+              "spin bike"
+            ]
+          },
+          {
+            "id": "home_gym_equipment",
+            "name": "Home Gym Equipment",
+            "keywords": [
+              "home gym equipment",
+              "treadmill",
+              "home gym",
+              "exercise equipment",
+              "fitness equipment"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "camping_hiking",
+        "name": "Camping & Hiking",
+        "subsubcategories": [
+          {
+            "id": "tents_shelters",
+            "name": "Tents & Shelters",
+            "keywords": [
+              "tents",
+              "camping",
+              "hiking gear",
+              "tent",
+              "camping tent",
+              "shelter"
+            ]
+          },
+          {
+            "id": "sleeping_bags_pads",
+            "name": "Sleeping Bags & Pads",
+            "keywords": [
+              "sleeping bag",
+              "sleeping bags",
+              "sleeping pad",
+              "camping pad",
+              "air mattress"
+            ]
+          },
+          {
+            "id": "backpacks_daypacks",
+            "name": "Backpacks & Daypacks",
+            "keywords": [
+              "camping backpacks",
+              "hiking backpacks",
+              "daypack",
+              "hiking pack",
+              "backpack"
+            ]
+          },
+          {
+            "id": "camping_cooking_gear",
+            "name": "Camping Cooking Gear",
+            "keywords": [
+              "Camp cooking gear",
+              "Camping Cooking",
+              "camp stove",
+              "camping stove",
+              "portable grill"
+            ]
+          },
+          {
+            "id": "hiking_boots",
+            "name": "Hiking Boots",
+            "keywords": [
+              "Camp boots",
+              "Hike boots",
+              "Hiking boots",
+              "hiking shoes",
+              "trail shoes"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cycling",
+        "name": "Cycling",
+        "subsubcategories": [
+          {
+            "id": "bicycles",
+            "name": "Bicycles",
+            "keywords": [
+              "road bike",
+              "mountain bike",
+              "electric bike",
+              "bicycle",
+              "bike",
+              "e-bike",
+              "hybrid bike",
+              "kids bike"
+            ]
+          },
+          {
+            "id": "bike_accessories",
+            "name": "Bike Accessories",
+            "keywords": [
+              "bike frame",
+              "handlebars",
+              "saddle",
+              "bike seat",
+              "pedals",
+              "bike chain",
+              "bike brakes"
+            ]
+          },
+          {
+            "id": "helmets_protective_gear",
+            "name": "Helmets & Protective Gear",
+            "keywords": [
+              "helmet",
+              "adjustable straps",
+              "cycling gloves",
+              "knee pads"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fishing",
+        "name": "Fishing",
+        "subsubcategories": [
+          {
+            "id": "fishing_rods_reels",
+            "name": "Fishing Rods & Reels",
+            "keywords": [
+              "fishing rods",
+              "fishing reels",
+              "fishing",
+              "fishing rod",
+              "reel",
+              "tackle"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "automotive": {
+    "name": "Automotive",
+    "subcategories": [
+      {
+        "id": "car_accessories",
+        "name": "Car Accessories",
+        "subsubcategories": [
+          {
+            "id": "car_interior_accessories",
+            "name": "Car Interior Accessories",
+            "keywords": [
+              "seat covers",
+              "steering wheel cover",
+              "car cushions",
+              "armrest cushion",
+              "car foot rest",
+              "car phone charger",
+              "car floor mats"
+            ]
+          },
+          {
+            "id": "car_exterior_accessories",
+            "name": "Car Exterior Accessories",
+            "keywords": [
+              "car cover",
+              "sunshade cover",
+              "fog lights",
+              "taillight covers",
+              "license plate lights"
+            ]
+          },
+          {
+            "id": "car_maintenance_care",
+            "name": "Car Maintenance Care",
+            "keywords": [
+              "car shampoo",
+              "microfiber towels",
+              "waterless car wash spray",
+              "tire shine",
+              "bug & tar remover",
+              "car wax",
+              "wheel cleaner"
+            ]
+          },
+          {
+            "id": "car_electronics_gps",
+            "name": "Car Electronics & GPS",
+            "keywords": [
+              "gps",
+              "car audio",
+              "car stereo",
+              "navigation",
+              "dash cam",
+              "car camera"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "tools_equipment",
+        "name": "Tools & Equipment",
+        "subsubcategories": [
+          {
+            "id": "power_tools",
+            "name": "Power Tools",
+            "keywords": [
+              "Impact & Torque Tools",
+              "impact wrench",
+              "torque wrench",
+              "power tool"
+            ]
+          },
+          {
+            "id": "auto_hand_tools",
+            "name": "Auto Hand Tools",
+            "keywords": [
+              "auto hand tools",
+              "wrench",
+              "socket",
+              "jack",
+              "car tools"
+            ]
+          },
+          {
+            "id": "automotive_repair_tools",
+            "name": "Automotive Repair Tools",
+            "keywords": [
+              "auto repair tools",
+              "repair tools",
+              "diagnostic",
+              "OBD"
+            ]
+          },
+          {
+            "id": "garage_equipment_storage",
+            "name": "Garage Equipment & Storage",
+            "keywords": [
+              "garage equipment",
+              "garage storage",
+              "tool chest",
+              "garage"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "office_supplies": {
+    "name": "Office Supplies",
+    "subcategories": [
+      {
+        "id": "office_furniture",
+        "name": "Office Furniture",
+        "subsubcategories": [
+          {
+            "id": "desks_chairs",
+            "name": "Desks & Chairs",
+            "keywords": [
+              "standing desk",
+              "workstation desk",
+              "computer desk",
+              "desk with drawers",
+              "office chair",
+              "reclining office chair",
+              "desk",
+              "office desk",
+              "ergonomic chair"
+            ]
+          },
+          {
+            "id": "office_accessories",
+            "name": "Office Accessories",
+            "keywords": [
+              "monitor stand",
+              "keyboard tray",
+              "cable management tray",
+              "desk drawer organizer",
+              "desk pad",
+              "desk mat",
+              "footrest",
+              "armrest pads",
+              "chair mat"
+            ]
+          },
+          {
+            "id": "filing_cabinets_storage",
+            "name": "Filing Cabinets & Storage",
+            "keywords": ["File cabinet", "File storage"]
+          },
+          {
+            "id": "office_lightning",
+            "name": "Office Lighting",
+            "keywords": [
+              "office lamp",
+              "table lamp",
+              "desk lamp",
+              "LED lamp",
+              "lighting"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stationery_school_supplies",
+        "name": "Stationery & School Supplies",
+        "subsubcategories": [
+          {
+            "id": "noteboks_journals",
+            "name": "Notebooks & Journals",
+            "keywords": [
+              "notebooks",
+              "journals",
+              "notebook",
+              "journal",
+              "planner",
+              "notepad"
+            ]
+          },
+          {
+            "id": "pens_pencils",
+            "name": "Pens & Pencils",
+            "keywords": ["pens", "pen", "pencils", "pencil"]
+          },
+          {
+            "id": "desk_organizers",
+            "name": "Desk & Organizers",
+            "keywords": ["desk organizer"]
+          },
+          {
+            "id": "lunchboxes",
+            "name": "Backpacks & Lunchboxes",
+            "keywords": ["office lunchbox", "lunchbox"]
+          }
+        ]
+      },
+      {
+        "id": "printers_scanners",
+        "name": "Printers & Scanners",
+        "subsubcategories": [
+          {
+            "id": "laser_printers",
+            "name": "Laser Printers",
+            "keywords": ["laser printer"]
+          },
+          {
+            "id": "inkjet_printers",
+            "name": "Inkjet printers",
+            "keywords": ["inkjet", "inkjet printer"]
+          },
+          {
+            "id": "all_in_one_printers",
+            "name": "All-in-One Printers",
+            "keywords": ["all in one printer"]
+          },
+          {
+            "id": "scanners_copiers",
+            "name": "Scanners & Copiers",
+            "keywords": ["scanners", "copiers"]
+          }
+        ]
+      }
+    ]
+  },
+  "tools_home_improvement": {
+    "name": "Tools & Home Improvement",
+    "subcategories": [
+      {
+        "id": "hands_tools",
+        "name": "Hand Tools",
+        "subsubcategories": [
+          {
+            "id": "wrenches_sockets",
+            "name": "Wrenches & Sockets",
+            "keywords": ["wrench", "socket"]
+          },
+          {
+            "id": "hammers_pliers",
+            "name": "Hammers & Pliers",
+            "keywords": ["hammers", "pliers"]
+          },
+          {
+            "id": "screwdrivers_sets",
+            "name": "Screwdrivers & Sets",
+            "keywords": ["screw driver", "screwdriver"]
+          },
+          {
+            "id": "tape_measures",
+            "name": "Tape Measures",
+            "keywords": ["tape measure"]
+          }
+        ]
+      },
+      {
+        "id": "power_tools",
+        "name": "Power Tools",
+        "subsubcategories": [
+          {
+            "id": "drills_drivers",
+            "name": "Drills & Drivers",
+            "keywords": ["drills", "drivers"]
+          },
+          {
+            "id": "saws_cutters",
+            "name": "Saws & Cutters",
+            "keywords": ["saws", "cutters"]
+          },
+          {
+            "id": "sanders_polishers",
+            "name": "Sanders & Polishers",
+            "keywords": ["sanders"]
+          }
+        ]
+      },
+      {
+        "id": "home_improvement",
+        "name": "Home Improvement",
+        "subsubcategories": [
+          {
+            "id": "paint_supplies",
+            "name": "Paint & Supplies",
+            "keywords": ["paint supplies"]
+          },
+          {
+            "id": "flooring_tiling",
+            "name": "Flooring & Tiling",
+            "keywords": ["flooring", "tile", "tiling"]
+          },
+          {
+            "id": "plumbing",
+            "name": "Plumbing",
+            "keywords": [
+              "plumbing",
+              "pipe",
+              "faucet",
+              "toilet",
+              "sink",
+              "drain",
+              "shower",
+              "tap"
+            ]
+          },
+          {
+            "id": "electrical_supplies",
+            "name": "Electrical Supplies",
+            "keywords": [
+              "electrical",
+              "wiring",
+              "outlet",
+              "switch",
+              "bulb",
+              "extension cord",
+              "power strip"
+            ]
+          },
+          {
+            "id": "kitchen",
+            "name": "Kitchen",
+            "keywords": [
+              "kitchen",
+              "cabinet",
+              "counter",
+              "kitchen sink",
+              "faucet",
+              "kitchen fixture"
+            ]
+          },
+          {
+            "id": "bath_fixtures",
+            "name": "Bath Fixtures",
+            "keywords": [
+              "bath fixture",
+              "bathroom",
+              "shower",
+              "bathtub",
+              "vanity",
+              "bath faucet"
+            ]
+          },
+          {
+            "id": "lightning_ceiling_fans",
+            "name": "Lighting & Ceiling Fans",
+            "keywords": [
+              "lighting",
+              "ceiling fan",
+              "ceiling fans",
+              "chandelier",
+              "light fixture"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "gardening_outdoor": {
+    "name": "Gardening & Outdoor",
+    "subcategories": [
+      {
+        "id": "outdoor_furniture",
+        "name": "Outdoor furniture",
+        "subsubcategories": [
+          {
+            "id": "patio_sets",
+            "name": "Patio Sets",
+            "keywords": ["patio sets"]
+          },
+          {
+            "id": "hammocks_swings",
+            "name": "Hammocks & Swings",
+            "keywords": ["hammock", "swing"]
+          },
+          {
+            "id": "outdoor_cushions",
+            "name": "Outdoor Cushions",
+            "keywords": ["outdoor cushion"]
+          }
+        ]
+      },
+      {
+        "id": "gardening_tools",
+        "name": "Gardening Tools",
+        "subsubcategories": [
+          {
+            "id": "lawn_mowers",
+            "name": "Lawn Mowers",
+            "keywords": ["lawn mower", "lawn mowers", "mower", "grass cutter"]
+          },
+          {
+            "id": "pruners_shears",
+            "name": "Pruners & Shears",
+            "keywords": [
+              "pruners",
+              "shears",
+              "pruner",
+              "garden tools",
+              "trimming"
+            ]
+          },
+          {
+            "id": "planters_pots",
+            "name": "Planters & Pots",
+            "keywords": [
+              "planters",
+              "pots",
+              "planter",
+              "flower pot",
+              "garden pot",
+              "pot"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "travel_luggage": {
+    "name": "Travel & Luggage",
+    "subcategories": [
+      {
+        "id": "luggage_bags",
+        "name": "Luggage & Bags",
+        "subsubcategories": [
+          {
+            "id": "suitecases_carry_ons",
+            "name": "Suitcases & Carry-ons",
+            "keywords": [
+              "suitcase",
+              "suitcases",
+              "carry on",
+              "carry ons",
+              "luggage"
+            ]
+          },
+          {
+            "id": "backpacks_duffel_bags",
+            "name": "Backpacks & Duffel Bags",
+            "keywords": ["backpacks", "duffel bag"]
+          },
+          {
+            "id": "travel_accessories",
+            "name": "Travel Accessories",
+            "keywords": [
+              "travel accessories",
+              "travel accessory",
+              "packing cube",
+              "travel kit"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "travel_gear",
+        "name": "Travel Gear",
+        "subsubcategories": [
+          {
+            "id": "travel_pillows",
+            "name": "Travel Pillows",
+            "keywords": ["travel pillows"]
+          },
+          {
+            "id": "passport_holders_organizers",
+            "name": "Passport Holders & Organizers",
+            "keywords": ["passport holder", "organizer"]
+          },
+          {
+            "id": "luggage_tags_locks",
+            "name": "Luggage Tags & Locks",
+            "keywords": ["luggage tags", "locks"]
+          }
+        ]
+      }
+    ]
+  },
+  "general": {
+    "name": "General",
+    "subcategories": [
+      {
+        "id": "general",
+        "name": "General",
+        "subsubcategories": [
+          {
+            "id": "general",
+            "name": "General",
+            "keywords": [
+              "any",
+              "some",
+              "misc",
+              "miscellaneous",
+              "other",
+              "general",
+              "various"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

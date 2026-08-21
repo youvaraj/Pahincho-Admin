@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getClaimsForItem, getItemById, getTransactionsForItem } from "@/lib/queries";
 import { claimTone, isTransactionOverdue, itemTone, transactionTone } from "@/lib/statusTone";
 import { Card } from "@/components/Card";
+import { ItemPhoto } from "@/components/ItemPhoto";
 import { StatusBadge } from "@/components/StatusBadge";
 import { StatTile } from "@/components/StatTile";
 
@@ -28,24 +29,39 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
         ← Items
       </Link>
 
-      <div className="mt-4 flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-lg font-semibold text-ink-primary">{item.title}</h1>
-          <p className="mt-1 max-w-2xl text-sm text-ink-secondary">{item.description || "No description."}</p>
-          <p className="mt-2 text-sm text-ink-muted">
-            Owner:{" "}
-            <Link href={`/users/${item.ownerId}`} className="text-accent hover:underline">
-              {item.ownerId}
-            </Link>
-          </p>
-          {item.currentBorrowerId && (
-            <p className="mt-1 text-sm text-ink-muted">
-              Current borrower:{" "}
-              <Link href={`/users/${item.currentBorrowerId}`} className="text-accent hover:underline">
-                {item.currentBorrowerId}
+      <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
+        <div className="flex min-w-0 flex-1 flex-wrap items-start gap-4">
+          {item.imageUrl ? (
+            <ItemPhoto imageUrl={item.imageUrl} title={item.title} itemId={item.itemId} />
+          ) : null}
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg font-semibold text-ink-primary">{item.title}</h1>
+            {item.categoryPath ? (
+              <p className="mt-1 text-xs italic text-ink-muted">
+                {item.categoryPath}
+              </p>
+            ) : null}
+            <p className="mt-1 max-w-2xl text-sm text-ink-secondary">
+              {item.description || "No description."}
+            </p>
+            <p className="mt-2 text-sm text-ink-muted">
+              Owner:{" "}
+              <Link href={`/users/${item.ownerId}`} className="text-accent hover:underline">
+                {item.ownerId}
               </Link>
             </p>
-          )}
+            {item.currentBorrowerId && (
+              <p className="mt-1 text-sm text-ink-muted">
+                Current borrower:{" "}
+                <Link
+                  href={`/users/${item.currentBorrowerId}`}
+                  className="text-accent hover:underline"
+                >
+                  {item.currentBorrowerId}
+                </Link>
+              </p>
+            )}
+          </div>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-2">
           <StatusBadge tone={itemTone(item.status)} label={item.status} />
