@@ -74,13 +74,19 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-5">
         <StatTile label="Points to rent" value={item.pointsToRent} />
         <StatTile label="Points to acquire" value={item.pointsToAcquire} />
         <StatTile label="Estimated value" value={item.estimatedValue} />
         <Card className="p-5">
           <p className="text-sm text-ink-secondary">Condition</p>
           <p className="mt-1.5 text-2xl font-semibold capitalize text-ink-primary">{item.condition}</p>
+        </Card>
+        <Card className="p-5">
+          <p className="text-sm text-ink-secondary">Owner drop-off</p>
+          <p className="mt-1.5 text-2xl font-semibold text-ink-primary">
+            {item.ownerWillingToDropoff ? "Yes" : "No"}
+          </p>
         </Card>
       </div>
 

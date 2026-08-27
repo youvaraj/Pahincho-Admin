@@ -8,7 +8,15 @@ import { Card } from "@/components/Card";
 import { Spinner } from "@/components/Spinner";
 import { Pagination } from "@/components/Pagination";
 
-const HEADERS = ["Title", "Owner", "Status", "Points (acquire)", "Points (rent)", "Listed"];
+const HEADERS = [
+  "Title",
+  "Owner",
+  "Status",
+  "Drop-off",
+  "Points (acquire)",
+  "Points (rent)",
+  "Listed",
+];
 
 function ItemsTableBody({ items }: { items: Awaited<ReturnType<typeof searchItems>> }) {
   return (
@@ -41,6 +49,9 @@ function ItemsTableBody({ items }: { items: Awaited<ReturnType<typeof searchItem
               </td>
               <td className="px-4 py-3">
                 <StatusBadge tone={itemTone(item.status)} label={item.status} />
+              </td>
+              <td className="px-4 py-3 text-ink-secondary">
+                {item.ownerWillingToDropoff ? "Yes" : "No"}
               </td>
               <td className="px-4 py-3">{item.pointsToAcquire}</td>
               <td className="px-4 py-3">{item.pointsToRent}</td>

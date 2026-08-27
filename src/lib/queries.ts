@@ -313,6 +313,8 @@ export type ItemRow = {
   subsubcategoryId: string | null;
   /** Resolved display path: Category › Subcategory › Sub-subcategory */
   categoryPath: string | null;
+  /** Owner opted in at listing to possibly drop the item off. */
+  ownerWillingToDropoff: boolean;
 };
 
 function firstImageUrl(value: unknown): string | null {
@@ -343,6 +345,7 @@ function toItemRow(doc: QueryDocumentSnapshot<DocumentData>): ItemRow {
     subcategoryId: categoryIds.subcategoryId,
     subsubcategoryId: categoryIds.subsubcategoryId,
     categoryPath: formatCategoryPath(categoryIds),
+    ownerWillingToDropoff: d.ownerWillingToDropoff === true,
   };
 }
 
