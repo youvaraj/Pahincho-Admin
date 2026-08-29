@@ -31,3 +31,35 @@ export function buildItemLabelQrImageUrl(itemId: string, size = 280): string {
 export function shortItemCode(itemId: string): string {
   return itemId.length <= 10 ? itemId : `${itemId.slice(0, 6)}…${itemId.slice(-4)}`;
 }
+
+/** Neighbor giveaway post for Nextdoor / social — fill title, link, and optional zip. */
+export function buildItemGiveawayAdMessage(opts: {
+  title: string;
+  itemId: string;
+  zipCode?: string | null;
+  ownerWillingToDropoff?: boolean;
+}): string {
+  const title = opts.title.trim() || "this item";
+  const deepLink = buildItemLabelDeepLink(opts.itemId);
+  const zip = opts.zipCode?.trim() || null;
+
+  const lines = [
+    `Hi neighbors! I'm giving away a ${title} for free.`,
+    "To keep things fair and easy to organize, I put it up on Pahincho (a local neighbor-sharing app).",
+    `You can grab it or request it here: ${deepLink}`,
+  ];
+
+  if (opts.ownerWillingToDropoff && zip) {
+    lines.push(
+      `Happy to drop it off if you're within ~5 miles of ${zip}! Looking forward to passing this along to someone nearby.`,
+    );
+  } else if (opts.ownerWillingToDropoff) {
+    lines.push(
+      "Happy to drop it off if you're nearby! Looking forward to passing this along to someone nearby.",
+    );
+  } else {
+    lines.push("Looking forward to passing this along to someone nearby.");
+  }
+
+  return lines.join("\n");
+}

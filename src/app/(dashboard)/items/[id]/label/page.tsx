@@ -39,6 +39,8 @@ export default async function ItemLabelPage({
           title={item.title}
           listedAt={item.listedAt}
           ownerFirstName={ownerFirstName}
+          zipCode={item.zipCode}
+          ownerWillingToDropoff={item.ownerWillingToDropoff}
         />
       </div>
     </div>

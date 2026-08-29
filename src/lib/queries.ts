@@ -315,6 +315,8 @@ export type ItemRow = {
   categoryPath: string | null;
   /** Owner opted in at listing to possibly drop the item off. */
   ownerWillingToDropoff: boolean;
+  /** From item.location.zipCode when set at listing. */
+  zipCode: string | null;
 };
 
 function firstImageUrl(value: unknown): string | null {
@@ -346,6 +348,10 @@ function toItemRow(doc: QueryDocumentSnapshot<DocumentData>): ItemRow {
     subsubcategoryId: categoryIds.subsubcategoryId,
     categoryPath: formatCategoryPath(categoryIds),
     ownerWillingToDropoff: d.ownerWillingToDropoff === true,
+    zipCode:
+      typeof d.location?.zipCode === "string" && d.location.zipCode.trim()
+        ? d.location.zipCode.trim()
+        : null,
   };
 }
 

@@ -4,6 +4,7 @@ import { getClaimsForItem, getItemById, getTransactionsForItem } from "@/lib/que
 import { claimTone, isTransactionOverdue, itemTone, transactionTone } from "@/lib/statusTone";
 import { Card } from "@/components/Card";
 import { ItemPhoto } from "@/components/ItemPhoto";
+import { ItemShareActions } from "@/components/ItemShareActions";
 import { StatusBadge } from "@/components/StatusBadge";
 import { StatTile } from "@/components/StatTile";
 
@@ -71,6 +72,13 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
           >
             Print label
           </Link>
+          <ItemShareActions
+            itemId={item.itemId}
+            title={item.title}
+            zipCode={item.zipCode}
+            ownerWillingToDropoff={item.ownerWillingToDropoff}
+            className="justify-end"
+          />
         </div>
       </div>
 

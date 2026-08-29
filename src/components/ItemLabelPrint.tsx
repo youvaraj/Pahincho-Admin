@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { BASE_PATH } from "@/lib/basePath";
+import { ItemShareActions } from "@/components/ItemShareActions";
 import {
-  buildItemLabelDeepLink,
   buildItemLabelQrImageUrl,
   shortItemCode,
 } from "@/lib/itemLabel";
@@ -13,6 +13,8 @@ type Props = {
   title: string;
   listedAt?: string | null;
   ownerFirstName?: string | null;
+  zipCode?: string | null;
+  ownerWillingToDropoff?: boolean;
 };
 
 /** Physical label size for wireless/Bluetooth thermal printers */
@@ -35,27 +37,17 @@ export function ItemLabelPrint({
   title,
   listedAt,
   ownerFirstName,
+  zipCode,
+  ownerWillingToDropoff,
 }: Props) {
-  const deepLink = buildItemLabelDeepLink(itemId);
   // Dense QR for small thermal labels (~1.15" square)
   const qrUrl = buildItemLabelQrImageUrl(itemId, 220);
   const posted = formatPostedShort(listedAt);
   const owner = ownerFirstName?.trim() || null;
-  const [copied, setCopied] = useState(false);
 
   const onPrint = useCallback(() => {
     window.print();
   }, []);
-
-  const onCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(deepLink);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  }, [deepLink]);
 
   return (
     <div>
@@ -67,13 +59,12 @@ export function ItemLabelPrint({
         >
           Print label (3″ × 2″)
         </button>
-        <button
-          type="button"
-          onClick={onCopy}
-          className="rounded-md border border-border bg-surface px-4 py-2 text-sm text-ink-primary hover:bg-page"
-        >
-          {copied ? "Copied link" : "Copy deep link"}
-        </button>
+        <ItemShareActions
+          itemId={itemId}
+          title={title}
+          zipCode={zipCode}
+          ownerWillingToDropoff={ownerWillingToDropoff}
+        />
         <p className="text-xs text-ink-muted">
           Sized for 3″ × 2″ thermal labels. In the print dialog, set paper/label to 3×2
           and margins to none / minimum.
