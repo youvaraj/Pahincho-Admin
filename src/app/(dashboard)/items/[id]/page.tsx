@@ -98,6 +98,33 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
         </Card>
       </div>
 
+      <Section title="Location">
+        <dl className="grid gap-4 px-4 py-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <dt className="text-ink-secondary">ZIP code</dt>
+            <dd className="mt-1 font-medium text-ink-primary">{item.zipCode ?? "—"}</dd>
+          </div>
+          <div>
+            <dt className="text-ink-secondary">Latitude</dt>
+            <dd className="mt-1 font-mono text-ink-primary">
+              {item.locationLatitude != null ? item.locationLatitude : "—"}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-ink-secondary">Longitude</dt>
+            <dd className="mt-1 font-mono text-ink-primary">
+              {item.locationLongitude != null ? item.locationLongitude : "—"}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-ink-secondary">Geohash</dt>
+            <dd className="mt-1 break-all font-mono text-ink-primary">
+              {item.locationGeohash ?? "—"}
+            </dd>
+          </div>
+        </dl>
+      </Section>
+
       <Section title={`Transaction history (${transactions.length})`}>
         {transactions.length === 0 ? (
           <p className="px-4 py-6 text-center text-sm text-ink-muted">None.</p>

@@ -317,6 +317,9 @@ export type ItemRow = {
   ownerWillingToDropoff: boolean;
   /** From item.location.zipCode when set at listing. */
   zipCode: string | null;
+  locationLatitude: number | null;
+  locationLongitude: number | null;
+  locationGeohash: string | null;
 };
 
 function firstImageUrl(value: unknown): string | null {
@@ -351,6 +354,14 @@ function toItemRow(doc: QueryDocumentSnapshot<DocumentData>): ItemRow {
     zipCode:
       typeof d.location?.zipCode === "string" && d.location.zipCode.trim()
         ? d.location.zipCode.trim()
+        : null,
+    locationLatitude:
+      typeof d.location?.latitude === "number" ? d.location.latitude : null,
+    locationLongitude:
+      typeof d.location?.longitude === "number" ? d.location.longitude : null,
+    locationGeohash:
+      typeof d.location?.geohash === "string" && d.location.geohash.trim()
+        ? d.location.geohash.trim()
         : null,
   };
 }
