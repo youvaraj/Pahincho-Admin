@@ -72,6 +72,10 @@ export async function getItemsCount(): Promise<number> {
   return count(getAdminDb().collection('items'));
 }
 
+export async function getWishlistCount(): Promise<number> {
+  return count(getAdminDb().collection('wishlist'));
+}
+
 /**
  * Penalty.status only ever has "pending" | "paid" | "escalated" written in practice
  * (confirmed against the Pahincho1 app source) — "pending_payment"/"disputed" are
@@ -352,15 +356,15 @@ function toItemRow(doc: QueryDocumentSnapshot<DocumentData>): ItemRow {
     categoryPath: formatCategoryPath(categoryIds),
     ownerWillingToDropoff: d.ownerWillingToDropoff === true,
     zipCode:
-      typeof d.location?.zipCode === "string" && d.location.zipCode.trim()
+      typeof d.location?.zipCode === 'string' && d.location.zipCode.trim()
         ? d.location.zipCode.trim()
         : null,
     locationLatitude:
-      typeof d.location?.latitude === "number" ? d.location.latitude : null,
+      typeof d.location?.latitude === 'number' ? d.location.latitude : null,
     locationLongitude:
-      typeof d.location?.longitude === "number" ? d.location.longitude : null,
+      typeof d.location?.longitude === 'number' ? d.location.longitude : null,
     locationGeohash:
-      typeof d.location?.geohash === "string" && d.location.geohash.trim()
+      typeof d.location?.geohash === 'string' && d.location.geohash.trim()
         ? d.location.geohash.trim()
         : null,
   };
@@ -778,4 +782,76 @@ export async function getPointsTransactionsForUser(
   return snap.docs
     .map(toPointsTransactionRow)
     .sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? ''));
+}
+
+export type WishlistRow = {
+  wishlistId: string;
+  userId: string;
+  itemTitle: string;
+  description: string | null;
+  priority: string;
+  status: string;
+  createdAt: string | null;
+};
+
+export type WishlistRowWithUser = WishlistRow & {
+  userFirstName: string;
+  userLastName: string;
+  userEmail: string;
+};
+
+function toWishlistRow(doc: QueryDocumentSnapshot<DocumentData>): WishlistRow {
+  const d = doc.data();
+  return {
+    wishlistId: doc.id,
+    userId: d.userId ?? '',
+    itemTitle: d.itemTitle ?? '',
+    description: typeof d.description === 'string' ? d.description : null,
+    priority: d.priority ?? 'medium',
+    status: d.status ?? 'active',
+    createdAt: toIso(d.createdAt),
+  };
+}
+
+export async function getWishlistPage(
+  cursorId?: string,
+  limitN = 25,
+): Promise<PageResult<WishlistRow>> {
+  return getPage('wishlist', 'createdAt', toWishlistRow, cursorId, limitN);
+}
+
+/** Batch-load poster names for the current wishlist page (one round-trip). */
+export async function enrichWishlistWithUsers(
+  rows: WishlistRow[],
+): Promise<WishlistRowWithUser[]> {
+  const userIds = [...new Set(rows.map((r) => r.userId).filter(Boolean))];
+  const userById = new Map<
+    string,
+    { firstName: string; lastName: string; email: string }
+  >();
+
+  if (userIds.length > 0) {
+    const db = getAdminDb();
+    const refs = userIds.map((id) => db.collection('users').doc(id));
+    const snaps = await db.getAll(...refs);
+    for (const snap of snaps) {
+      if (!snap.exists) continue;
+      const d = snap.data()!;
+      userById.set(snap.id, {
+        firstName: d.firstName ?? '',
+        lastName: d.lastName ?? '',
+        email: d.email ?? '',
+      });
+    }
+  }
+
+  return rows.map((row) => {
+    const user = userById.get(row.userId);
+    return {
+      ...row,
+      userFirstName: user?.firstName ?? '',
+      userLastName: user?.lastName ?? '',
+      userEmail: user?.email ?? '',
+    };
+  });
 }

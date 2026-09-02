@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   ArrowLeftRight,
   Flag,
+  Heart,
   LayoutDashboard,
   Package,
   Users,
@@ -14,6 +15,7 @@ const NAV_LINKS = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
   { href: "/users", label: "Users", icon: Users },
   { href: "/items", label: "Items", icon: Package },
+  { href: "/wishlist", label: "Wishlist", icon: Heart },
   { href: "/transactions", label: "Transactions", icon: ArrowLeftRight },
   { href: "/claims", label: "Claims", icon: Flag },
 ];

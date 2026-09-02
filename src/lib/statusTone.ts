@@ -117,3 +117,29 @@ export function adminClaimTone(status: string): Tone {
       return "neutral";
   }
 }
+
+export function wishlistStatusTone(status: string): Tone {
+  switch (status) {
+    case "active":
+      return "good";
+    case "found":
+      return "warning";
+    case "fulfilled":
+      return "good";
+    case "removed":
+    default:
+      return "neutral";
+  }
+}
+
+export function wishlistPriorityTone(priority: string): Tone {
+  switch (priority) {
+    case "high":
+      return "warning";
+    case "medium":
+      return "neutral";
+    case "low":
+    default:
+      return "neutral";
+  }
+}
