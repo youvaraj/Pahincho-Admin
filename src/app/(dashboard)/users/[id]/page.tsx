@@ -25,6 +25,16 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { StatTile } from "@/components/StatTile";
 import { AdjustPointsForm } from "@/components/AdjustPointsForm";
 
+function formatUserPlace(user: {
+  city: string | null;
+  state: string | null;
+  zipCode: string | null;
+}): string | null {
+  const place = [user.city, user.state].filter(Boolean).join(", ");
+  if (place && user.zipCode) return `${place} · ${user.zipCode}`;
+  return place || user.zipCode;
+}
+
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mt-8">
@@ -106,6 +116,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
       getPointsTransactionsForUser(id),
     ]);
 
+  const place = formatUserPlace(user);
+
   return (
     <div className="mx-auto max-w-6xl">
       <Link href="/users" className="text-sm text-ink-secondary hover:text-ink-primary">
@@ -118,6 +130,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
             {user.firstName} {user.lastName}
           </h1>
           <p className="text-sm text-ink-secondary">{user.email}</p>
+          {place ? <p className="mt-1 text-sm text-ink-muted">{place}</p> : null}
         </div>
         <div className="flex items-center gap-2">
           <StatusBadge tone={userTone(user.accountStatus)} label={user.accountStatus} />
@@ -132,6 +145,23 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
         <StatTile label="Listed items" value={user.listedItemCount} />
         <StatTile label="Borrowed items" value={user.borrowedItemCount} />
       </div>
+
+      <Section title="Location">
+        <dl className="grid gap-4 px-4 py-4 text-sm sm:grid-cols-3">
+          <div>
+            <dt className="text-ink-secondary">City</dt>
+            <dd className="mt-1 font-medium text-ink-primary">{user.city ?? "—"}</dd>
+          </div>
+          <div>
+            <dt className="text-ink-secondary">State</dt>
+            <dd className="mt-1 font-medium text-ink-primary">{user.state ?? "—"}</dd>
+          </div>
+          <div>
+            <dt className="text-ink-secondary">ZIP code</dt>
+            <dd className="mt-1 font-medium text-ink-primary">{user.zipCode ?? "—"}</dd>
+          </div>
+        </dl>
+      </Section>
 
       <Section title={`Items posted (${postedItems.length})`}>
         {postedItems.length === 0 ? (

@@ -16,6 +16,28 @@ function toIso(value: unknown): string | null {
     : null;
 }
 
+function readTrimmedString(value: unknown): string | null {
+  return typeof value === 'string' && value.trim() ? value.trim() : null;
+}
+
+/** Profile location first (`users.location`), then billing address (`users.address`). */
+function readUserPlace(d: DocumentData): {
+  city: string | null;
+  state: string | null;
+  zipCode: string | null;
+} {
+  const loc = d.location && typeof d.location === 'object' ? d.location : {};
+  const addr = d.address && typeof d.address === 'object' ? d.address : {};
+  return {
+    city: readTrimmedString(loc.city) ?? readTrimmedString(addr.city),
+    state: readTrimmedString(loc.state) ?? readTrimmedString(addr.state),
+    zipCode:
+      readTrimmedString(loc.zipCode) ??
+      readTrimmedString(addr.zip) ??
+      readTrimmedString(addr.zipCode),
+  };
+}
+
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 }
@@ -212,10 +234,15 @@ export type UserRow = {
   points: number;
   rating: number;
   createdAt: string | null;
+  /** From users.location (profile), then users.address (billing). */
+  city: string | null;
+  state: string | null;
+  zipCode: string | null;
 };
 
 function toUserRow(doc: QueryDocumentSnapshot<DocumentData>): UserRow {
   const d = doc.data();
+  const place = readUserPlace(d);
   return {
     userId: doc.id,
     firstName: d.firstName ?? '',
@@ -229,6 +256,9 @@ function toUserRow(doc: QueryDocumentSnapshot<DocumentData>): UserRow {
     points: d.points ?? 0,
     rating: d.rating ?? 0,
     createdAt: toIso(d.createdAt),
+    city: place.city,
+    state: place.state,
+    zipCode: place.zipCode,
   };
 }
 
