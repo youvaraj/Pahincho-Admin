@@ -3,14 +3,26 @@
 import { Fragment, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import type { TransactionFilter, TransactionRow } from "@/lib/queries";
+import type { TransactionFilter, TransactionRowWithLocation } from "@/lib/queries";
 import { isTransactionOverdue, transactionTone } from "@/lib/statusTone";
 import { StatusBadge } from "./StatusBadge";
 import { Card } from "./Card";
+import { LOCATION_HEADERS, LocationCells } from "./LocationCells";
 
-const HEADERS = ["", "Item", "Owner", "Borrower", "Type", "Status", "Points", "Due", "Created"];
+const HEADERS = [
+  "",
+  "Item",
+  "Owner",
+  "Borrower",
+  "Type",
+  "Status",
+  "Points",
+  "Due",
+  ...LOCATION_HEADERS,
+  "Created",
+];
 
-function DetailRow({ t }: { t: TransactionRow }) {
+function DetailRow({ t }: { t: TransactionRowWithLocation }) {
   return (
     <tr className="border-b border-border bg-page last:border-0">
       <td colSpan={HEADERS.length} className="px-4 py-4">
@@ -79,7 +91,7 @@ export function TransactionsTable({
   transactions,
   filter,
 }: {
-  transactions: TransactionRow[];
+  transactions: TransactionRowWithLocation[];
   filter: TransactionFilter;
 }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
@@ -156,6 +168,7 @@ export function TransactionsTable({
                   <td className="px-4 py-3 text-ink-muted">
                     {t.currentDueDate ? new Date(t.currentDueDate).toLocaleDateString() : "—"}
                   </td>
+                  <LocationCells place={t} />
                   <td className="px-4 py-3 text-ink-muted">
                     {t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "—"}
                   </td>

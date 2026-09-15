@@ -8,6 +8,16 @@ import type {
 } from 'firebase-admin/firestore';
 import { getAdminDb } from './firebaseAdmin';
 import { formatCategoryPath, readCategoryIds } from './categoryPath';
+import type { ItemListFilters } from './itemFilters';
+import { haversineMiles, type LocationFields } from './geo';
+
+export type { ItemDropoffFilter, ItemListFilters, ItemStatus } from './itemFilters';
+export {
+  ITEM_STATUS_LABELS,
+  ITEM_STATUSES,
+  isItemDropoffFilter,
+  isItemStatus,
+} from './itemFilters';
 
 function toIso(value: unknown): string | null {
   const ts = value as Timestamp | undefined;
@@ -36,6 +46,85 @@ function readUserPlace(d: DocumentData): {
       readTrimmedString(addr.zip) ??
       readTrimmedString(addr.zipCode),
   };
+}
+
+function readLatLng(loc: unknown): {
+  latitude: number | null;
+  longitude: number | null;
+} {
+  if (!loc || typeof loc !== 'object') {
+    return { latitude: null, longitude: null };
+  }
+  const o = loc as Record<string, unknown>;
+  return {
+    latitude: typeof o.latitude === 'number' ? o.latitude : null,
+    longitude: typeof o.longitude === 'number' ? o.longitude : null,
+  };
+}
+
+type GeoPlace = {
+  city: string | null;
+  zipCode: string | null;
+  latitude: number | null;
+  longitude: number | null;
+};
+
+const EMPTY_PLACE: GeoPlace = {
+  city: null,
+  zipCode: null,
+  latitude: null,
+  longitude: null,
+};
+
+function readItemPlace(d: DocumentData): GeoPlace {
+  const loc = d.location && typeof d.location === 'object' ? d.location : {};
+  return {
+    city: readTrimmedString((loc as DocumentData).city),
+    zipCode: readTrimmedString((loc as DocumentData).zipCode),
+    ...readLatLng(loc),
+  };
+}
+
+function readRequesterPlace(d: DocumentData): GeoPlace {
+  const named = readUserPlace(d);
+  return {
+    city: named.city,
+    zipCode: named.zipCode,
+    ...readLatLng(d.location),
+  };
+}
+
+function milesBetween(a: GeoPlace, b: GeoPlace): number | null {
+  if (
+    a.latitude == null ||
+    a.longitude == null ||
+    b.latitude == null ||
+    b.longitude == null
+  ) {
+    return null;
+  }
+  return haversineMiles(
+    { latitude: a.latitude, longitude: a.longitude },
+    { latitude: b.latitude, longitude: b.longitude },
+  );
+}
+
+async function loadPlacesById(
+  collection: string,
+  ids: string[],
+  read: (d: DocumentData) => GeoPlace,
+): Promise<Map<string, GeoPlace>> {
+  const out = new Map<string, GeoPlace>();
+  if (ids.length === 0) return out;
+  const db = getAdminDb();
+  const snaps = await db.getAll(
+    ...ids.map((id) => db.collection(collection).doc(id)),
+  );
+  for (const snap of snaps) {
+    if (!snap.exists) continue;
+    out.set(snap.id, read(snap.data()!));
+  }
+  return out;
 }
 
 function capitalize(s: string): string {
@@ -90,8 +179,37 @@ export async function getUsersCount(): Promise<number> {
   return count(getAdminDb().collection('users'));
 }
 
-export async function getItemsCount(): Promise<number> {
-  return count(getAdminDb().collection('items'));
+function applyItemFilters(
+  query: Query<DocumentData>,
+  filters: ItemListFilters = {},
+): Query<DocumentData> {
+  if (filters.status && filters.status !== 'all') {
+    query = query.where('status', '==', filters.status);
+  }
+  if (filters.dropoff === 'yes') {
+    query = query.where('ownerWillingToDropoff', '==', true);
+  } else if (filters.dropoff === 'no') {
+    query = query.where('ownerWillingToDropoff', '==', false);
+  }
+  return query;
+}
+
+function matchesItemFilters(
+  item: ItemRow,
+  filters: ItemListFilters = {},
+): boolean {
+  if (filters.status && filters.status !== 'all' && item.status !== filters.status) {
+    return false;
+  }
+  if (filters.dropoff === 'yes' && !item.ownerWillingToDropoff) return false;
+  if (filters.dropoff === 'no' && item.ownerWillingToDropoff) return false;
+  return true;
+}
+
+export async function getItemsCount(
+  filters: ItemListFilters = {},
+): Promise<number> {
+  return count(applyItemFilters(getAdminDb().collection('items'), filters));
 }
 
 export async function getWishlistCount(): Promise<number> {
@@ -407,9 +525,15 @@ function toItemRow(doc: QueryDocumentSnapshot<DocumentData>): ItemRow {
  * pragmatic way to cover "search by description" at the current catalog size — move
  * to Algolia/Typesense if the catalog grows past a few thousand items.
  */
-export async function searchItems(term: string): Promise<ItemRow[]> {
+export async function searchItems(
+  term: string,
+  filters: ItemListFilters = {},
+): Promise<ItemRow[]> {
   const trimmed = term.trim();
   const db = getAdminDb();
+
+  const apply = (rows: ItemRow[]) =>
+    rows.filter((item) => matchesItemFilters(item, filters)).slice(0, 25);
 
   if (!trimmed) {
     const snap = await db
@@ -417,7 +541,7 @@ export async function searchItems(term: string): Promise<ItemRow[]> {
       .orderBy('listedAt', 'desc')
       .limit(25)
       .get();
-    return snap.docs.map(toItemRow);
+    return apply(snap.docs.map(toItemRow));
   }
 
   const titleRange = prefixRange('title', trimmed);
@@ -427,18 +551,18 @@ export async function searchItems(term: string): Promise<ItemRow[]> {
     .where('title', '<=', titleRange.to)
     .limit(25)
     .get();
-  if (!titleSnap.empty) return titleSnap.docs.map(toItemRow);
+  if (!titleSnap.empty) return apply(titleSnap.docs.map(toItemRow));
 
   const byId = await db.collection('items').doc(trimmed).get();
   if (byId.exists)
-    return [toItemRow(byId as QueryDocumentSnapshot<DocumentData>)];
+    return apply([toItemRow(byId as QueryDocumentSnapshot<DocumentData>)]);
 
   const byOwner = await db
     .collection('items')
     .where('ownerId', '==', trimmed)
     .limit(25)
     .get();
-  if (!byOwner.empty) return byOwner.docs.map(toItemRow);
+  if (!byOwner.empty) return apply(byOwner.docs.map(toItemRow));
 
   const lower = trimmed.toLowerCase();
   const recentSnap = await db
@@ -446,14 +570,15 @@ export async function searchItems(term: string): Promise<ItemRow[]> {
     .orderBy('listedAt', 'desc')
     .limit(300)
     .get();
-  return recentSnap.docs
-    .map(toItemRow)
-    .filter(
-      (item) =>
-        item.title.toLowerCase().includes(lower) ||
-        item.description.toLowerCase().includes(lower),
-    )
-    .slice(0, 25);
+  return apply(
+    recentSnap.docs
+      .map(toItemRow)
+      .filter(
+        (item) =>
+          item.title.toLowerCase().includes(lower) ||
+          item.description.toLowerCase().includes(lower),
+      ),
+  );
 }
 
 export async function getItemById(itemId: string): Promise<ItemRow | null> {
@@ -463,12 +588,35 @@ export async function getItemById(itemId: string): Promise<ItemRow | null> {
     : null;
 }
 
-/** Paginated, unfiltered browse of the items collection (see `getPage`). */
+/**
+ * Paginated browse of `items`, newest `listedAt` first. Equality filters on
+ * status / ownerWillingToDropoff stay on the query (limit 25) so paging cost
+ * does not grow with catalog size. Combined filters need composite indexes —
+ * Firestore returns a console create-link the first time each shape runs.
+ */
 export async function getItemsPage(
   cursorId?: string,
   limitN = 25,
+  filters: ItemListFilters = {},
 ): Promise<PageResult<ItemRow>> {
-  return getPage('items', 'listedAt', toItemRow, cursorId, limitN);
+  const db = getAdminDb();
+  let query: Query<DocumentData> = applyItemFilters(
+    db.collection('items'),
+    filters,
+  )
+    .orderBy('listedAt', 'desc')
+    .limit(limitN);
+
+  if (cursorId) {
+    const cursorDoc = await db.collection('items').doc(cursorId).get();
+    if (cursorDoc.exists) query = query.startAfter(cursorDoc);
+  }
+
+  const snap = await query.get();
+  const rows = snap.docs.map(toItemRow);
+  const nextCursor =
+    snap.docs.length === limitN ? snap.docs[snap.docs.length - 1].id : null;
+  return { rows, nextCursor };
 }
 
 export async function getItemsForOwner(
@@ -617,6 +765,37 @@ export async function getTransactions(
   const nextCursor =
     snap.docs.length === limitN ? snap.docs[snap.docs.length - 1].id : null;
   return { rows, nextCursor };
+}
+
+export type TransactionRowWithLocation = TransactionRow & LocationFields;
+
+/**
+ * Batch-load item + requester profile locations for a page of transactions
+ * (two getAll round-trips, not per-row). Distance is haversine miles when
+ * both sides have coordinates.
+ */
+export async function enrichTransactionsWithLocations(
+  rows: TransactionRow[],
+): Promise<TransactionRowWithLocation[]> {
+  const itemIds = [...new Set(rows.map((r) => r.itemId).filter(Boolean))];
+  const requesterIds = [...new Set(rows.map((r) => r.borrowerId).filter(Boolean))];
+  const [itemById, requesterById] = await Promise.all([
+    loadPlacesById('items', itemIds, readItemPlace),
+    loadPlacesById('users', requesterIds, readRequesterPlace),
+  ]);
+
+  return rows.map((row) => {
+    const item = itemById.get(row.itemId) ?? EMPTY_PLACE;
+    const requester = requesterById.get(row.borrowerId) ?? EMPTY_PLACE;
+    return {
+      ...row,
+      itemCity: item.city,
+      itemZipCode: item.zipCode,
+      requesterCity: requester.city,
+      requesterZipCode: requester.zipCode,
+      distanceMiles: milesBetween(item, requester),
+    };
+  });
 }
 
 export async function getTransactionsAsBorrower(

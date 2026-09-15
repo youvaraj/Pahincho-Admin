@@ -1,9 +1,17 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { getItemsCount, getItemsPage, searchItems } from "@/lib/queries";
+import {
+  isItemDropoffFilter,
+  isItemStatus,
+  type ItemDropoffFilter,
+  type ItemListFilters,
+  type ItemStatus,
+} from "@/lib/itemFilters";
 import { itemTone } from "@/lib/statusTone";
 import { StatusBadge } from "@/components/StatusBadge";
 import { SearchInput } from "@/components/SearchInput";
+import { ItemsFilters } from "@/components/ItemsFilters";
 import { Card } from "@/components/Card";
 import { Spinner } from "@/components/Spinner";
 import { Pagination } from "@/components/Pagination";
@@ -73,33 +81,47 @@ function ItemsTableBody({ items }: { items: Awaited<ReturnType<typeof searchItem
   );
 }
 
-// Fetches the total count and the page/search results together so they always
-// appear in the same paint. Unfiltered browsing pages via a Firestore cursor stack
-// (Prev/Next, 25 at a time — see Pagination); an active search term stays capped at
-// a bounded result set (see searchItems) rather than paginated, since the
-// prefix/id/owner/substring fallback chain doesn't have one stable shared cursor to
-// page through, and a real search is usually narrow anyway.
-async function ItemsContent({ q, cursors }: { q: string; cursors: string[] }) {
-  const total = await getItemsCount();
+function listExtraQuery(q: string, filters: ItemListFilters) {
+  return {
+    q: q || undefined,
+    status: filters.status && filters.status !== "all" ? filters.status : undefined,
+    dropoff: filters.dropoff && filters.dropoff !== "all" ? filters.dropoff : undefined,
+  };
+}
 
+// Fetches the matching count and the page/search results together so they always
+// appear in the same paint. Unfiltered (and filter-only) browsing pages via a
+// Firestore cursor stack; an active search term stays capped at a bounded result
+// set (see searchItems) rather than paginated.
+async function ItemsContent({
+  q,
+  cursors,
+  filters,
+}: {
+  q: string;
+  cursors: string[];
+  filters: ItemListFilters;
+}) {
   if (q) {
-    const items = await searchItems(q);
+    const items = await searchItems(q, filters);
     return (
       <>
-        <h1 className="mb-6 flex items-center gap-2 text-lg font-semibold text-ink-primary">
-          Items <span className="text-ink-muted">({total.toLocaleString()})</span>
-        </h1>
+        <p className="mb-3 text-sm text-ink-muted">
+          {items.length.toLocaleString()} search result{items.length === 1 ? "" : "s"}
+        </p>
         <ItemsTableBody items={items} />
       </>
     );
   }
 
-  const page = await getItemsPage(cursors[cursors.length - 1]);
+  const [total, page] = await Promise.all([
+    getItemsCount(filters),
+    getItemsPage(cursors[cursors.length - 1], 25, filters),
+  ]);
+
   return (
     <>
-      <h1 className="mb-6 flex items-center gap-2 text-lg font-semibold text-ink-primary">
-        Items <span className="text-ink-muted">({total.toLocaleString()})</span>
-      </h1>
+      <p className="mb-3 text-sm text-ink-muted">{total.toLocaleString()} items</p>
       <ItemsTableBody items={page.rows} />
       <Pagination
         basePath="/items"
@@ -108,6 +130,7 @@ async function ItemsContent({ q, cursors }: { q: string; cursors: string[] }) {
         hasNext={page.nextCursor !== null}
         prevCursors={cursors.slice(0, -1)}
         nextCursors={page.nextCursor ? [...cursors, page.nextCursor] : cursors}
+        extraQuery={listExtraQuery(q, filters)}
       />
     </>
   );
@@ -116,18 +139,34 @@ async function ItemsContent({ q, cursors }: { q: string; cursors: string[] }) {
 export default async function ItemsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; cursors?: string }>;
+  searchParams: Promise<{ q?: string; status?: string; dropoff?: string; cursors?: string }>;
 }) {
-  const { q = "", cursors: cursorsParam = "" } = await searchParams;
+  const {
+    q = "",
+    status: statusParam = "",
+    dropoff: dropoffParam = "",
+    cursors: cursorsParam = "",
+  } = await searchParams;
+  const status: ItemStatus | "all" = isItemStatus(statusParam) ? statusParam : "all";
+  const dropoff: ItemDropoffFilter = isItemDropoffFilter(dropoffParam) ? dropoffParam : "all";
+  const filters: ItemListFilters = { status, dropoff };
   const cursors = cursorsParam ? cursorsParam.split(",").filter(Boolean) : [];
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6">
-        <SearchInput initialValue={q} placeholder="Search by title, description, item ID, or owner ID…" />
+      <h1 className="mb-4 text-lg font-semibold text-ink-primary">Items</h1>
+      <div className="mb-3">
+        <ItemsFilters q={q} status={status} dropoff={dropoff} />
       </div>
-      <Suspense key={`${q}|${cursorsParam}`} fallback={<Spinner />}>
-        <ItemsContent q={q} cursors={cursors} />
+      <div className="mb-6">
+        <SearchInput
+          initialValue={q}
+          placeholder="Search by title, description, item ID, or owner ID…"
+          extraParams={listExtraQuery("", filters)}
+        />
+      </div>
+      <Suspense key={`${q}|${status}|${dropoff}|${cursorsParam}`} fallback={<Spinner />}>
+        <ItemsContent q={q} cursors={cursors} filters={filters} />
       </Suspense>
     </div>
   );

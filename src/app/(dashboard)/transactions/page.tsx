@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getTransactions, type TransactionFilter } from "@/lib/queries";
+import { getTransactions, enrichTransactionsWithLocations, type TransactionFilter } from "@/lib/queries";
 import { TransactionsTable } from "@/components/TransactionsTable";
 import { Spinner } from "@/components/Spinner";
 import { Pagination } from "@/components/Pagination";
@@ -19,10 +19,11 @@ const FILTERS: { value: TransactionFilter; label: string }[] = [
 // detail page and cramming every field into the row would fight the fixed columns.
 async function TransactionsResults({ filter, cursors }: { filter: TransactionFilter; cursors: string[] }) {
   const page = await getTransactions(filter, cursors[cursors.length - 1]);
+  const rows = await enrichTransactionsWithLocations(page.rows);
 
   return (
     <>
-      <TransactionsTable transactions={page.rows} filter={filter} />
+      <TransactionsTable transactions={rows} filter={filter} />
       <Pagination
         basePath="/transactions"
         currentPage={cursors.length + 1}
@@ -30,6 +31,7 @@ async function TransactionsResults({ filter, cursors }: { filter: TransactionFil
         hasNext={page.nextCursor !== null}
         prevCursors={cursors.slice(0, -1)}
         nextCursors={page.nextCursor ? [...cursors, page.nextCursor] : cursors}
+        extraQuery={filter === "all" ? undefined : { status: filter }}
       />
     </>
   );

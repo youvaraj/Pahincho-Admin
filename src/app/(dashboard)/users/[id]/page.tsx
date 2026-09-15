@@ -7,7 +7,8 @@ import {
   getTransactionsAsBorrower,
   getTransactionsAsOwner,
   getUserById,
-  type TransactionRow,
+  enrichTransactionsWithLocations,
+  type TransactionRowWithLocation,
 } from "@/lib/queries";
 import { listAdminClaimsForUser } from "@/lib/claims";
 import { CLAIM_STATUS_LABELS } from "@/lib/claimTypes";
@@ -24,6 +25,7 @@ import { Card } from "@/components/Card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { StatTile } from "@/components/StatTile";
 import { AdjustPointsForm } from "@/components/AdjustPointsForm";
+import { LOCATION_HEADERS, LocationCells } from "@/components/LocationCells";
 
 function formatUserPlace(user: {
   city: string | null;
@@ -35,10 +37,21 @@ function formatUserPlace(user: {
   return place || user.zipCode;
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  hint,
+  children,
+}: {
+  title: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="mt-8">
-      <h2 className="mb-3 text-sm font-semibold text-ink-primary">{title}</h2>
+      <h2 className={`text-sm font-semibold text-ink-primary ${hint ? "mb-1" : "mb-3"}`}>
+        {title}
+      </h2>
+      {hint ? <p className="mb-3 text-xs text-ink-muted">{hint}</p> : null}
       <Card className="overflow-x-auto">{children}</Card>
     </div>
   );
@@ -48,10 +61,13 @@ function TransactionsTable({
   rows,
   counterpartLabel,
   counterpartId,
+  showDue = false,
 }: {
-  rows: TransactionRow[];
+  rows: TransactionRowWithLocation[];
   counterpartLabel: string;
-  counterpartId: (row: TransactionRow) => string;
+  counterpartId: (row: TransactionRowWithLocation) => string;
+  /** Borrow/rental only — get (keep) has no due date. */
+  showDue?: boolean;
 }) {
   if (rows.length === 0) {
     return <p className="px-4 py-6 text-center text-sm text-ink-muted">None.</p>;
@@ -62,9 +78,13 @@ function TransactionsTable({
         <tr>
           <th className="px-4 py-3 font-medium">Item</th>
           <th className="px-4 py-3 font-medium">{counterpartLabel}</th>
-          <th className="px-4 py-3 font-medium">Type</th>
           <th className="px-4 py-3 font-medium">Status</th>
-          <th className="px-4 py-3 font-medium">Due</th>
+          {showDue ? <th className="px-4 py-3 font-medium">Due</th> : null}
+          {LOCATION_HEADERS.map((h) => (
+            <th key={h} className="px-4 py-3 font-medium">
+              {h}
+            </th>
+          ))}
           <th className="px-4 py-3 font-medium">Created</th>
         </tr>
       </thead>
@@ -81,16 +101,18 @@ function TransactionsTable({
                 {counterpartId(t)}
               </Link>
             </td>
-            <td className="px-4 py-3 capitalize">{t.transactionType}</td>
             <td className="px-4 py-3">
               <StatusBadge
                 tone={isTransactionOverdue(t) ? "warning" : transactionTone(t.status)}
                 label={isTransactionOverdue(t) ? "overdue" : t.status}
               />
             </td>
-            <td className="px-4 py-3 text-ink-muted">
-              {t.currentDueDate ? new Date(t.currentDueDate).toLocaleDateString() : "—"}
-            </td>
+            {showDue ? (
+              <td className="px-4 py-3 text-ink-muted">
+                {t.currentDueDate ? new Date(t.currentDueDate).toLocaleDateString() : "—"}
+              </td>
+            ) : null}
+            <LocationCells place={t} />
             <td className="px-4 py-3 text-ink-muted">
               {t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "—"}
             </td>
@@ -106,7 +128,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
   const user = await getUserById(id);
   if (!user) notFound();
 
-  const [postedItems, borrowedTx, lentTx, supportClaims, appDisputes, pointsHistory] =
+  const [postedItems, incomingTx, outgoingTx, supportClaims, appDisputes, pointsHistory] =
     await Promise.all([
       getItemsForOwner(id),
       getTransactionsAsBorrower(id),
@@ -115,6 +137,18 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
       getClaimsForUser(id),
       getPointsTransactionsForUser(id),
     ]);
+
+  const located = await enrichTransactionsWithLocations([...incomingTx, ...outgoingTx]);
+  const incomingIds = new Set(incomingTx.map((t) => t.transactionId));
+
+  // Firestore uses borrowerId for the seeker on both flows. Split by
+  // transactionType so get (keep / given away) is not mixed into borrow.
+  const incomingLocated = located.filter((t) => incomingIds.has(t.transactionId));
+  const outgoingLocated = located.filter((t) => !incomingIds.has(t.transactionId));
+  const receivedTx = incomingLocated.filter((t) => t.transactionType === "get");
+  const borrowedTx = incomingLocated.filter((t) => t.transactionType !== "get");
+  const givenAwayTx = outgoingLocated.filter((t) => t.transactionType === "get");
+  const lentTx = outgoingLocated.filter((t) => t.transactionType !== "get");
 
   const place = formatUserPlace(user);
 
@@ -198,12 +232,50 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
         )}
       </Section>
 
-      <Section title={`Borrowed (${borrowedTx.length})`}>
-        <TransactionsTable rows={borrowedTx} counterpartLabel="Owner" counterpartId={(t) => t.ownerId} />
+      <Section
+        title={`Received (${receivedTx.length})`}
+        hint="Get requests this user sent — completed means they kept the item."
+      >
+        <TransactionsTable
+          rows={receivedTx}
+          counterpartLabel="Owner"
+          counterpartId={(t) => t.ownerId}
+        />
       </Section>
 
-      <Section title={`Lent out (${lentTx.length})`}>
-        <TransactionsTable rows={lentTx} counterpartLabel="Borrower" counterpartId={(t) => t.borrowerId} />
+      <Section
+        title={`Borrowed (${borrowedTx.length})`}
+        hint="Borrow requests this user sent — due date applies until return."
+      >
+        <TransactionsTable
+          rows={borrowedTx}
+          counterpartLabel="Owner"
+          counterpartId={(t) => t.ownerId}
+          showDue
+        />
+      </Section>
+
+      <Section
+        title={`Given away (${givenAwayTx.length})`}
+        hint="Get requests on this user's listings — completed means given for good."
+      >
+        <TransactionsTable
+          rows={givenAwayTx}
+          counterpartLabel="Recipient"
+          counterpartId={(t) => t.borrowerId}
+        />
+      </Section>
+
+      <Section
+        title={`Lent out (${lentTx.length})`}
+        hint="Borrow requests on this user's listings."
+      >
+        <TransactionsTable
+          rows={lentTx}
+          counterpartLabel="Borrower"
+          counterpartId={(t) => t.borrowerId}
+          showDue
+        />
       </Section>
 
       <div className="mt-8">

@@ -8,6 +8,20 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
  * random-access offset, so this intentionally stays sequential (constant cost per
  * click, regardless of how deep you page).
  */
+function listHref(
+  basePath: string,
+  extraQuery: Record<string, string | undefined> | undefined,
+  cursors: string[],
+): string {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(extraQuery ?? {})) {
+    if (value) params.set(key, value);
+  }
+  if (cursors.length > 0) params.set("cursors", cursors.join(","));
+  const qs = params.toString();
+  return qs ? `${basePath}?${qs}` : basePath;
+}
+
 export function Pagination({
   basePath,
   currentPage,
@@ -15,6 +29,7 @@ export function Pagination({
   hasNext,
   prevCursors,
   nextCursors,
+  extraQuery,
 }: {
   basePath: string;
   currentPage: number;
@@ -22,9 +37,11 @@ export function Pagination({
   hasNext: boolean;
   prevCursors: string[];
   nextCursors: string[];
+  /** Filters/search to keep on prev/next (e.g. status, dropoff, q). */
+  extraQuery?: Record<string, string | undefined>;
 }) {
-  const prevHref = prevCursors.length ? `${basePath}?cursors=${prevCursors.join(",")}` : basePath;
-  const nextHref = `${basePath}?cursors=${nextCursors.join(",")}`;
+  const prevHref = listHref(basePath, extraQuery, prevCursors);
+  const nextHref = listHref(basePath, extraQuery, nextCursors);
 
   return (
     <div className="mt-4 flex items-center justify-between">

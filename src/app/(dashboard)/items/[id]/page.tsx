@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getClaimsForItem, getItemById, getTransactionsForItem } from "@/lib/queries";
+import { getClaimsForItem, getItemById, getTransactionsForItem, enrichTransactionsWithLocations } from "@/lib/queries";
 import { claimTone, isTransactionOverdue, itemTone, transactionTone } from "@/lib/statusTone";
 import { Card } from "@/components/Card";
 import { ItemPhoto } from "@/components/ItemPhoto";
 import { ItemShareActions } from "@/components/ItemShareActions";
 import { StatusBadge } from "@/components/StatusBadge";
 import { StatTile } from "@/components/StatTile";
+import { LOCATION_HEADERS, LocationCells } from "@/components/LocationCells";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -23,6 +24,7 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
   if (!item) notFound();
 
   const [transactions, claims] = await Promise.all([getTransactionsForItem(id), getClaimsForItem(id)]);
+  const located = await enrichTransactionsWithLocations(transactions);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -125,8 +127,8 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
         </dl>
       </Section>
 
-      <Section title={`Transaction history (${transactions.length})`}>
-        {transactions.length === 0 ? (
+      <Section title={`Transaction history (${located.length})`}>
+        {located.length === 0 ? (
           <p className="px-4 py-6 text-center text-sm text-ink-muted">None.</p>
         ) : (
           <table className="w-full text-left text-sm">
@@ -137,11 +139,16 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
                 <th className="px-4 py-3 font-medium">Type</th>
                 <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 font-medium">Due</th>
+                {LOCATION_HEADERS.map((h) => (
+                  <th key={h} className="px-4 py-3 font-medium">
+                    {h}
+                  </th>
+                ))}
                 <th className="px-4 py-3 font-medium">Created</th>
               </tr>
             </thead>
             <tbody>
-              {transactions.map((t) => (
+              {located.map((t) => (
                 <tr key={t.transactionId} className="border-b border-border last:border-0 hover:bg-page">
                   <td className="px-4 py-3">
                     <Link href={`/users/${t.ownerId}`} className="text-accent hover:underline">
@@ -163,6 +170,7 @@ export default async function ItemDetailPage({ params }: { params: Promise<{ id:
                   <td className="px-4 py-3 text-ink-muted">
                     {t.currentDueDate ? new Date(t.currentDueDate).toLocaleDateString() : "—"}
                   </td>
+                  <LocationCells place={t} />
                   <td className="px-4 py-3 text-ink-muted">
                     {t.createdAt ? new Date(t.createdAt).toLocaleDateString() : "—"}
                   </td>

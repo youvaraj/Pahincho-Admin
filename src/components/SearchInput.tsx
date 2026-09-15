@@ -7,15 +7,17 @@ import { useRef, useState, useTransition } from "react";
 /**
  * Debounces input, then does a client-side (no full reload) URL update so the
  * Suspense boundary around the results can stream in a fresh skeleton per term.
- * Clearing the field navigates back to the bare route, which restores the
- * unfiltered default list.
+ * Clearing the field drops `q` (and paging) but keeps any other list filters.
  */
 export function SearchInput({
   initialValue,
   placeholder,
+  extraParams,
 }: {
   initialValue: string;
   placeholder: string;
+  /** Other list filters to keep when the search term changes (paging is reset). */
+  extraParams?: Record<string, string | undefined>;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -35,7 +37,14 @@ export function SearchInput({
   function scheduleNavigate(term: string) {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
-      const url = term ? `${pathname}?q=${encodeURIComponent(term)}` : pathname;
+      const params = new URLSearchParams();
+      for (const [key, value] of Object.entries(extraParams ?? {})) {
+        if (value) params.set(key, value);
+      }
+      const trimmed = term.trim();
+      if (trimmed) params.set("q", trimmed);
+      const qs = params.toString();
+      const url = qs ? `${pathname}?${qs}` : pathname;
       startTransition(() => router.replace(url, { scroll: false }));
     }, 300);
   }
