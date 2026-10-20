@@ -179,21 +179,6 @@ export async function getUsersCount(): Promise<number> {
   return count(getAdminDb().collection('users'));
 }
 
-function applyItemFilters(
-  query: Query<DocumentData>,
-  filters: ItemListFilters = {},
-): Query<DocumentData> {
-  if (filters.status && filters.status !== 'all') {
-    query = query.where('status', '==', filters.status);
-  }
-  if (filters.dropoff === 'yes') {
-    query = query.where('ownerWillingToDropoff', '==', true);
-  } else if (filters.dropoff === 'no') {
-    query = query.where('ownerWillingToDropoff', '==', false);
-  }
-  return query;
-}
-
 function matchesItemFilters(
   item: ItemRow,
   filters: ItemListFilters = {},
@@ -206,10 +191,104 @@ function matchesItemFilters(
   return true;
 }
 
+function itemListFiltersActive(filters: ItemListFilters = {}): boolean {
+  return (
+    (!!filters.status && filters.status !== 'all') ||
+    filters.dropoff === 'yes' ||
+    filters.dropoff === 'no'
+  );
+}
+
+function paginateItemRows(
+  rows: ItemRow[],
+  cursorId: string | undefined,
+  limitN: number,
+): PageResult<ItemRow> {
+  const sorted = [...rows].sort((a, b) =>
+    (b.listedAt ?? '').localeCompare(a.listedAt ?? ''),
+  );
+  let start = 0;
+  if (cursorId) {
+    const idx = sorted.findIndex((row) => row.itemId === cursorId);
+    start = idx >= 0 ? idx + 1 : 0;
+  }
+  const page = sorted.slice(start, start + limitN);
+  const nextCursor =
+    start + page.length < sorted.length
+      ? (page[page.length - 1]?.itemId ?? null)
+      : null;
+  return { rows: page, nextCursor };
+}
+
+/**
+ * Single-field equality only (auto-indexed). A second filter is applied in
+ * memory so we never need composite (status, listedAt) indexes.
+ */
+async function loadItemsMatchingFilters(
+  filters: ItemListFilters,
+): Promise<ItemRow[]> {
+  const db = getAdminDb();
+  let query: Query<DocumentData> = db.collection('items');
+  if (filters.status && filters.status !== 'all') {
+    query = query.where('status', '==', filters.status);
+  } else if (filters.dropoff === 'yes') {
+    query = query.where('ownerWillingToDropoff', '==', true);
+  } else if (filters.dropoff === 'no') {
+    query = query.where('ownerWillingToDropoff', '==', false);
+  }
+  const snap = await query.get();
+  return snap.docs
+    .map(toItemRow)
+    .filter((row) => matchesItemFilters(row, filters));
+}
+
+/** Newest-first listedAt scan, keeping rows that match filters. */
+async function scanListedItems(
+  filters: ItemListFilters,
+  cursorId: string | undefined,
+  limitN: number,
+): Promise<PageResult<ItemRow>> {
+  const matched: ItemRow[] = [];
+  let cursor = cursorId;
+  for (let i = 0; i < 40 && matched.length < limitN; i++) {
+    const page = await getPage('items', 'listedAt', toItemRow, cursor, 50);
+    if (page.rows.length === 0) break;
+    for (const row of page.rows) {
+      if (!matchesItemFilters(row, filters)) continue;
+      matched.push(row);
+      if (matched.length === limitN) {
+        return { rows: matched, nextCursor: row.itemId };
+      }
+    }
+    if (page.nextCursor == null) {
+      return { rows: matched, nextCursor: null };
+    }
+    cursor = page.nextCursor;
+  }
+  return { rows: matched, nextCursor: matched.length === limitN ? matched[matched.length - 1]?.itemId ?? null : null };
+}
+
 export async function getItemsCount(
   filters: ItemListFilters = {},
 ): Promise<number> {
-  return count(applyItemFilters(getAdminDb().collection('items'), filters));
+  const db = getAdminDb();
+  if (!itemListFiltersActive(filters)) {
+    return count(db.collection('items'));
+  }
+  if (filters.status && filters.status !== 'all' && (!filters.dropoff || filters.dropoff === 'all')) {
+    return count(db.collection('items').where('status', '==', filters.status));
+  }
+  if (filters.dropoff === 'yes' && (!filters.status || filters.status === 'all')) {
+    return count(db.collection('items').where('ownerWillingToDropoff', '==', true));
+  }
+  if (filters.dropoff === 'no' && (!filters.status || filters.status === 'all')) {
+    const [total, yes] = await Promise.all([
+      count(db.collection('items')),
+      count(db.collection('items').where('ownerWillingToDropoff', '==', true)),
+    ]);
+    return Math.max(0, total - yes);
+  }
+  return (await loadItemsMatchingFilters(filters)).length;
 }
 
 export async function getWishlistCount(): Promise<number> {
@@ -589,34 +668,53 @@ export async function getItemById(itemId: string): Promise<ItemRow | null> {
 }
 
 /**
- * Paginated browse of `items`, newest `listedAt` first. Equality filters on
- * status / ownerWillingToDropoff stay on the query (limit 25) so paging cost
- * does not grow with catalog size. Combined filters need composite indexes —
- * Firestore returns a console create-link the first time each shape runs.
+ * Paginated browse of `items`, newest `listedAt` first.
+ *
+ * Unfiltered: `orderBy(listedAt)` + cursor (single-field index).
+ * Filtered: one equality (`status` or drop-off yes) — those are auto-indexed —
+ * then any second filter + listedAt sort happen in memory. Drop-off "no" alone
+ * walks the existing listedAt pages because that set is most of the catalog.
+ * This avoids composite indexes that are not deployed on the items collection.
  */
 export async function getItemsPage(
   cursorId?: string,
   limitN = 25,
   filters: ItemListFilters = {},
 ): Promise<PageResult<ItemRow>> {
-  const db = getAdminDb();
-  let query: Query<DocumentData> = applyItemFilters(
-    db.collection('items'),
-    filters,
-  )
-    .orderBy('listedAt', 'desc')
-    .limit(limitN);
-
-  if (cursorId) {
-    const cursorDoc = await db.collection('items').doc(cursorId).get();
-    if (cursorDoc.exists) query = query.startAfter(cursorDoc);
+  if (!itemListFiltersActive(filters)) {
+    return getPage('items', 'listedAt', toItemRow, cursorId, limitN);
   }
+  if (filters.dropoff === 'no' && (!filters.status || filters.status === 'all')) {
+    return scanListedItems(filters, cursorId, limitN);
+  }
+  const all = await loadItemsMatchingFilters(filters);
+  return paginateItemRows(all, cursorId, limitN);
+}
 
-  const snap = await query.get();
-  const rows = snap.docs.map(toItemRow);
-  const nextCursor =
-    snap.docs.length === limitN ? snap.docs[snap.docs.length - 1].id : null;
-  return { rows, nextCursor };
+/** One fetch for the items list: page rows plus the matching total. */
+export async function getItemsBrowse(
+  cursorId: string | undefined,
+  filters: ItemListFilters = {},
+  limitN = 25,
+): Promise<PageResult<ItemRow> & { total: number }> {
+  if (!itemListFiltersActive(filters)) {
+    const [total, page] = await Promise.all([
+      count(getAdminDb().collection('items')),
+      getPage('items', 'listedAt', toItemRow, cursorId, limitN),
+    ]);
+    return { ...page, total };
+  }
+  if (filters.dropoff === 'no' && (!filters.status || filters.status === 'all')) {
+    const db = getAdminDb();
+    const [total, yes, page] = await Promise.all([
+      count(db.collection('items')),
+      count(db.collection('items').where('ownerWillingToDropoff', '==', true)),
+      scanListedItems(filters, cursorId, limitN),
+    ]);
+    return { ...page, total: Math.max(0, total - yes) };
+  }
+  const all = await loadItemsMatchingFilters(filters);
+  return { ...paginateItemRows(all, cursorId, limitN), total: all.length };
 }
 
 export async function getItemsForOwner(

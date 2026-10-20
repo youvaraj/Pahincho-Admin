@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getItemsCount, getItemsPage, searchItems } from "@/lib/queries";
+import { getItemsBrowse, searchItems } from "@/lib/queries";
 import {
   isItemDropoffFilter,
   isItemStatus,
@@ -114,14 +114,11 @@ async function ItemsContent({
     );
   }
 
-  const [total, page] = await Promise.all([
-    getItemsCount(filters),
-    getItemsPage(cursors[cursors.length - 1], 25, filters),
-  ]);
+  const page = await getItemsBrowse(cursors[cursors.length - 1], filters);
 
   return (
     <>
-      <p className="mb-3 text-sm text-ink-muted">{total.toLocaleString()} items</p>
+      <p className="mb-3 text-sm text-ink-muted">{page.total.toLocaleString()} items</p>
       <ItemsTableBody items={page.rows} />
       <Pagination
         basePath="/items"
