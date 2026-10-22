@@ -25,6 +25,7 @@ import { Card } from "@/components/Card";
 import { StatusBadge } from "@/components/StatusBadge";
 import { StatTile } from "@/components/StatTile";
 import { AdjustPointsForm } from "@/components/AdjustPointsForm";
+import { FollowUpEmailButton } from "@/components/FollowUpEmailButton";
 import { LOCATION_HEADERS, LocationCells } from "@/components/LocationCells";
 
 function formatUserPlace(user: {
@@ -160,9 +161,16 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
 
       <div className="mt-4 flex items-start justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-ink-primary">
-            {user.firstName} {user.lastName}
-          </h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-lg font-semibold text-ink-primary">
+              {user.firstName} {user.lastName}
+            </h1>
+            <FollowUpEmailButton
+              firstName={user.firstName}
+              lastName={user.lastName}
+              email={user.email}
+            />
+          </div>
           <p className="text-sm text-ink-secondary">{user.email}</p>
           {place ? <p className="mt-1 text-sm text-ink-muted">{place}</p> : null}
         </div>
