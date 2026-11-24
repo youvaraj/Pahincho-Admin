@@ -6,7 +6,7 @@ import type {
   QueryDocumentSnapshot,
   Timestamp,
 } from 'firebase-admin/firestore';
-import { getAdminDb } from './firebaseAdmin';
+import { getAdminAuth, getAdminDb } from './firebaseAdmin';
 import { formatCategoryPath, readCategoryIds } from './categoryPath';
 import type { ItemListFilters } from './itemFilters';
 import { haversineMiles, type LocationFields } from './geo';
@@ -1161,4 +1161,71 @@ export async function enrichWishlistWithUsers(
       userEmail: user?.email ?? '',
     };
   });
+}
+
+export type GuestUserRow = {
+  uid: string;
+  createdAt: string | null;
+  lastSignInAt: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  locationUpdatedAt: string | null;
+};
+
+function isAnonymousAuthUser(user: {
+  email?: string;
+  phoneNumber?: string;
+  providerData: { providerId: string }[];
+}): boolean {
+  return !user.email && !user.phoneNumber && user.providerData.length === 0;
+}
+
+/** Anonymous Auth logins, newest sign-in first, with city from guestSessions when the app saved one. */
+export async function getGuestUsers(): Promise<GuestUserRow[]> {
+  const auth = getAdminAuth();
+  const guests: GuestUserRow[] = [];
+  let pageToken: string | undefined;
+
+  do {
+    const page = await auth.listUsers(1000, pageToken);
+    for (const user of page.users) {
+      if (!isAnonymousAuthUser(user)) continue;
+      guests.push({
+        uid: user.uid,
+        createdAt: user.metadata.creationTime || null,
+        lastSignInAt: user.metadata.lastSignInTime || null,
+        city: null,
+        state: null,
+        country: null,
+        locationUpdatedAt: null,
+      });
+    }
+    pageToken = page.pageToken;
+  } while (pageToken);
+
+  const db = getAdminDb();
+  for (let i = 0; i < guests.length; i += 100) {
+    const slice = guests.slice(i, i + 100);
+    const snaps = await db.getAll(
+      ...slice.map((guest) => db.collection('guestSessions').doc(guest.uid)),
+    );
+    snaps.forEach((snap, index) => {
+      if (!snap.exists) return;
+      const data = snap.data() ?? {};
+      const guest = slice[index];
+      guest.city = readTrimmedString(data.city);
+      guest.state = readTrimmedString(data.state);
+      guest.country = readTrimmedString(data.country);
+      guest.locationUpdatedAt = toIso(data.lastSeenAt);
+    });
+  }
+
+  guests.sort((a, b) => {
+    const aTime = Date.parse(a.lastSignInAt || a.createdAt || '') || 0;
+    const bTime = Date.parse(b.lastSignInAt || b.createdAt || '') || 0;
+    return bTime - aTime;
+  });
+
+  return guests;
 }

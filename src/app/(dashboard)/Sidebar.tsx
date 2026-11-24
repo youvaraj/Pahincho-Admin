@@ -8,12 +8,14 @@ import {
   Heart,
   LayoutDashboard,
   Package,
+  UserRound,
   Users,
 } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
   { href: "/users", label: "Users", icon: Users },
+  { href: "/guests", label: "Guest users", icon: UserRound },
   { href: "/items", label: "Items", icon: Package },
   { href: "/wishlist", label: "Wishlist", icon: Heart },
   { href: "/transactions", label: "Transactions", icon: ArrowLeftRight },
