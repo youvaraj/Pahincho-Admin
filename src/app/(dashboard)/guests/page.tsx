@@ -4,7 +4,7 @@ import { Card } from "@/components/Card";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const HEADERS = ["User id", "First opened", "Last opened", "Location", "Location updated"];
+const HEADERS = ["User id", "First opened", "Last opened", "Location", "Location updated", "Searches"];
 
 function formatWhen(value: string | null): string {
   if (!value) return "—";
@@ -28,8 +28,8 @@ export default async function GuestsPage() {
         Guest users <span className="text-ink-muted">({guests.length.toLocaleString()})</span>
       </h1>
       <p className="mb-6 text-sm text-ink-secondary">
-        Anonymous browse sessions. Location is the city saved after the 1.3.5 update, when the guest
-        allowed location. {withLocation.toLocaleString()} of {guests.length.toLocaleString()} have a city.
+        Anonymous browse sessions. Location and searches appear after the 1.3.5 update, once a guest
+        allows location or uses the home search box. {withLocation.toLocaleString()} of {guests.length.toLocaleString()} have a city.
       </p>
       <Card className="overflow-x-auto">
         <table className="w-full text-left text-sm">
@@ -52,6 +52,9 @@ export default async function GuestsPage() {
                   {formatPlace(guest.city, guest.state, guest.country)}
                 </td>
                 <td className="px-4 py-3 text-ink-muted">{formatWhen(guest.locationUpdatedAt)}</td>
+                <td className="px-4 py-3">
+                  {guest.recentSearches.length ? guest.recentSearches.join(", ") : "—"}
+                </td>
               </tr>
             ))}
             {guests.length === 0 && (

@@ -1171,6 +1171,7 @@ export type GuestUserRow = {
   state: string | null;
   country: string | null;
   locationUpdatedAt: string | null;
+  recentSearches: string[];
 };
 
 function isAnonymousAuthUser(user: {
@@ -1199,6 +1200,7 @@ export async function getGuestUsers(): Promise<GuestUserRow[]> {
         state: null,
         country: null,
         locationUpdatedAt: null,
+        recentSearches: [],
       });
     }
     pageToken = page.pageToken;
@@ -1218,6 +1220,9 @@ export async function getGuestUsers(): Promise<GuestUserRow[]> {
       guest.state = readTrimmedString(data.state);
       guest.country = readTrimmedString(data.country);
       guest.locationUpdatedAt = toIso(data.lastSeenAt);
+      guest.recentSearches = Array.isArray(data.recentSearches)
+        ? data.recentSearches.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+        : [];
     });
   }
 
